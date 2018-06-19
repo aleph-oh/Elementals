@@ -53,6 +53,8 @@ def is_base():
 
 def pick_first_elemental():
     team_one_first = raw_input('Pick an Elemental')
-    if team_one_first = 'Water'
+    if team_one_first == 'Water':
         return water
-    elif team_one_first = 
+    elif team_one_first == 'Fire':
+        return fire
+
