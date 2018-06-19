@@ -41,6 +41,14 @@ earth = [earth_atk, earth_def, earth_spd, earth_adv, earth_dis]
 wind = [wind_atk, wind_def, wind_spd, wind_adv, wind_dis]
 lightning = [lightning_atk, lightning_def, lightning_spd, lightning_adv, lightning_dis]
 
+magma_hp = 850 #Magma elemental maximum health points
+magma_mp = 500 #Magma elemental maximum mana points
+magma_atk = 1.4 #Magma elemental attack multiplier
+magma_def = 1 #Magma elemental defense multiplier
+magma_spd = 0.7 #Magma elemental speed multiplier
+magma_adv = ['Earth', 'Steam', 'Ice', 'Flora'] #Magma elemental offensive advantages
+magma_dis = ['Fire', 'Water', 'Thunder'] #Magma elemental defensive advantages
+
 def is_base():
     #Finds if an elemental is a base elemental. If yes, returns 1000 hp and 500 maximum mana. Otherwise, returns nothing.
     base_elements = ['Fire', 'Wind', 'Earth', 'Lightning', 'Water']
@@ -50,3 +58,4 @@ def is_base():
         return hp, mp
     else:
         return False
+
