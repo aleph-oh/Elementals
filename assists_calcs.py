@@ -59,3 +59,8 @@ def damage_calc():
     '''This program will solve for damage dealt from an attack with a given base power
         between two elementals.'''
     end
+
+def data():
+    '''This program will provide all of the stats of an elemental when provided
+        with such an elemental.'''
+    end
