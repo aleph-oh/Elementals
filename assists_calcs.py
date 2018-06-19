@@ -29,13 +29,13 @@ wind_spd = 1.2 #Wind elemental speed multiplier
 wind_adv = ['Smoke', 'Steam', 'Sand'] #Wind elemental offensive advantages
 wind_dis = ['Lightning', 'Ice', 'Crystal'] #Wind elemental offensive disadvantages
 
-lightning_atk = 1 #lightning elemental attack multiplier
-lightning_def = 0.8 #lightning elemental defense multiplier
-lightning_spd = 1.3 #lightning elemental speed multiplier
-lightning_adv = ['Wind', 'Water', 'Smoke'] #lightning elemental offensive advantages
-lightning_dis = ['Plasma', 'Sand', 'Storm'] #lightning elemental offensive disadvantages
+lightning_atk = 1 #Lightning elemental attack multiplier
+lightning_def = 0.8 #Lightning elemental defense multiplier
+lightning_spd = 1.3 #Lightning elemental speed multiplier
+lightning_adv = ['Wind', 'Water', 'Smoke'] #Lightning elemental offensive advantages
+lightning_dis = ['Plasma', 'Sand', 'Storm'] #Lightning elemental offensive disadvantages
 
-fire = [fire_atk, fire_def, fire_spd, fire_adv, fire_dis]
+fire = [fire_atk, fire_def, fire_spd, fire_adv, fire_dis]#defines
 water = [water_atk, water_def, water_spd, water_adv, water_dis]
 earth = [earth_atk, earth_def, earth_spd, earth_adv, earth_dis]
 wind = [wind_atk, wind_def, wind_spd, wind_adv, wind_dis]
@@ -50,9 +50,3 @@ def is_base():
         return hp, mp
     else:
         return False
-
-def pick_first_elemental():
-    team_one_first = raw_input('Pick an Elemental')
-    if team_one_first = 'Water'
-        return water
-    elif team_one_first = 
