@@ -84,17 +84,33 @@ def damage_calc(elemental_atk=False, elemental_def=False, atk_change=False, def_
         elemental_def = raw_input("Which elemental is defending? Keep in mind that if a barrier is up, in effect, the elemental that put up said barrier is defending.\n")
     #If atk_change is False or otherwise not a floating-point number, the below if statement is triggered. It asks the user what the change in ATK of the attacking elemental is.
     if type(atk_change) != float:
-        atk_change = float("What is the change of the ATK of the attacking elemental? If there isn't any, please type 0.\n")
+        atk_change = float(raw_input(("What is the change of the ATK of the attacking elemental? If there isn't any, please type 0.\n")))
     #If def_change is False or otherwise not a floating-point number, the below if statement is triggered. It asks the user what the change in DEF of the defending elemental is.
     if type(def_change) != float:
-        def_change = float("What is the change of the DEF of the defending elemental? If there isn't any, please type 0.\n")
+        def_change = float(raw_input(("What is the change of the DEF of the defending elemental? If there isn't any, please type 0.\n")))
+    #If base_power is False or otherwise not an integer, the below if statement is triggered. It asks the user what the base power of the attack is.
+    if type(base_power) != int:
+        base_power = int(raw_input(("What is the base power of the attack used by the attacking elemental? Please enter an integer. \n")))
+    
+    #Assigns attack and defense stats based on the elementals in question.
     atk_stat = elemental_dict[elemental_atk][2]
     def_stat = elemental_dict[elemental_def][3]
+    
+    #Changes attack based on advantage or disadvantage if present.
     if elemental_def in elemental_dict[elemental_atk][5]:
         atk_change += 0.2
     if elemental_def in elemental_dict[elemental_atk][6]:
         atk_change -= 0.2
-    #Introduce actual calculator by applying stat changes and formulas.
+    
+    #Calculator below applies changes to stats.
+    atk_stat += atk_change
+    def_stat += def_change
+    multiplier = atk_stat/def_stat
+    damage = multiplier * base_power
+    damage = round(damage)
+    damage = int(damage)
+    print "This attack will do " + str(damage) + " damage to the opposing " + elemental_def + " elemental or " + elemental_def + " barrier."
+
 def data(elemental=False):
     '''This program will provide all of the stats of an elemental when provided
         with such an elemental. It defaults to prompting for which elemental
