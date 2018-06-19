@@ -55,12 +55,36 @@ ice_adv = ['Earth', 'Sand', 'Flora', 'Storm'] #Ice elemental offensive advantage
 ice_dis = ['Fire', 'Magma', 'Plasma'] #Ice elemental offensive disadvantages
 ice = [1200, 550, 1.3, 0.7, 1.1, ice_adv, ice_dis] #Overall ice stats
 
+#Dictionary for converting strings describing an elemental into their stat arrays
+
+elemental_dict = {
+    "Fire" : fire,
+    "Water" : water,
+    "Earth" : earth,
+    "Wind" : wind,
+    "Lightning" : lightning,
+    "Magma" : magma,
+    "Smoke" : smoke,
+    "Plasma" : plasma,
+    "Steam" : steam,
+    "Sand" : sand,
+    "Thunder" : thunder,
+    "Ice" : ice, 
+    }
+    
 def damage_calc():
     '''This program will solve for damage dealt from an attack with a given base power
         between two elementals.'''
     end
 
-def data():
+def data(elemental=False):
     '''This program will provide all of the stats of an elemental when provided
-        with such an elemental.'''
-    end
+        with such an elemental. It defaults to prompting for which elemental
+        the user wants data about but the user can input the elemental they're
+        interested in if they understand Python.'''
+    #If elemental is False or otherwise not a string, the below if statement is triggered It asks the user which elemental they're interested in.
+    if type(elemental) != str:
+        elemental = raw_input("Which elemental would you like data on? Please make sure only to capitalize the first letter.\n")
+    stat_list = elemental_dict[elemental]
+    formatted_stat_list = elemental + "\n" + str(stat_list[0]) + " HP" + "\n" + str(stat_list[1]) + " Mana" + "\n"#Fix this newline formatting.
+    return formatted_stat_list
