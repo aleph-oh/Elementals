@@ -72,24 +72,40 @@ elemental_dict = {
     "Ice" : ice, 
     }
     
-def damage_calc(elemental_atk=False, elemental_def=False):
+def damage_calc(elemental_atk=False, elemental_def=False, atk_change=False, def_change=False, base_power=False):
     '''This program will solve for damage dealt from an attack with a given base power
         between two elementals. Like the program below it, it defaults to prompting for
         which elementals are attacking and which are defending if no input is given.'''
-    #If elemental is False or otherwise not a string, the below if statement is triggered It asks the user which elemental they're interested in.
-
-
+    #If elemental_atk is False or otherwise not a string, the below if statement is triggered. It asks the user which elemental is attacking.
+    if type(elemental_atk) != str:
+        elemental_atk = raw_input("Which elemental is attacking?\n")
+    #If elemental_def is False or otherwise not a string, the below if statement is triggered. It asks the user which elemental is defending.
+    if type(elemental_def) != str:
+        elemental_def = raw_input("Which elemental is defending? Keep in mind that if a barrier is up, in effect, the elemental that put up said barrier is defending.\n")
+    #If atk_change is False or otherwise not a floating-point number, the below if statement is triggered. It asks the user what the change in ATK of the attacking elemental is.
+    if type(atk_change) != float:
+        atk_change = float("What is the change of the ATK of the attacking elemental? If there isn't any, please type 0.\n")
+    #If def_change is False or otherwise not a floating-point number, the below if statement is triggered. It asks the user what the change in DEF of the defending elemental is.
+    if type(def_change) != float:
+        def_change = float("What is the change of the DEF of the defending elemental? If there isn't any, please type 0.\n")
+    atk_stat = elemental_dict[elemental_atk][2]
+    def_stat = elemental_dict[elemental_def][3]
+    if elemental_def in elemental_dict[elemental_atk][5]:
+        atk_change += 0.2
+    if elemental_def in elemental_dict[elemental_atk][6]:
+        atk_change -= 0.2
+    #Introduce actual calculator by applying stat changes and formulas.
 def data(elemental=False):
     '''This program will provide all of the stats of an elemental when provided
         with such an elemental. It defaults to prompting for which elemental
         the user wants data about but the user can input the elemental they're
         interested in if they understand Python.'''
-    #If elemental is False or otherwise not a string, the below if statement is triggered It asks the user which elemental they're interested in.
+    #If elemental is False or otherwise not a string, the below if statement is triggered. It asks the user which elemental they're interested in.
     if type(elemental) != str:
         elemental = raw_input("Which elemental would you like data on? Please make sure only to capitalize the first letter.\n")
     stat_list = elemental_dict[elemental]
     formatted_stat_list = elemental + "\n" + str(stat_list[0]) + " HP" + "\n" + str(stat_list[1]) + " Mana" + "\n" + str(stat_list[2]) + " ATK" + "\n" + str(stat_list[3]) + " DEF" + "\n" + str(stat_list[4]) + " SPD" + "\n"
-    
+    #The following is the print formatting for the output of the function.
     print formatted_stat_list + "Offensive Advantages: "
     for x in stat_list[5]:
         print x
