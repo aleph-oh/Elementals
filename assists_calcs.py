@@ -3,61 +3,64 @@ all elementals in for the usage of users.'''
 base_hp = 1000 #Health Points of all base elementals
 base_mp = 500 #Mana Points of all base elementals
 
-#Base Elementals atk, def, spd, adv, dis
+#Base Elementals [hp, mp, atk, def, spd, adv, dis]
 
-fire_atk = 1.2 #Fire elemental attack multiplier
-fire_def = 0.9 #Fire elemental defense multiplier
-fire_spd = 1 #Fire elemental speed multiplier
 fire_adv = ['Flora', 'Ice', 'Crystal'] #Fire elemental offensive advantages
 fire_dis = ['Water', 'Sand', 'Earth'] #Fire elemental offensive disadvantages
+fire = [base_hp, base_mp, 1.2, 0.9, 1, fire_adv, fire_dis]#Overall fire stats
 
-water_atk = 1 #Water elemental attack multiplier
-water_def = 1.1 #Water elemental defense multiplier
-water_spd = 1 #Water elemental speed multiplier
 water_adv = ['Fire', 'Magma', 'Sand', 'Earth'] #Water elemental offensive advantages
 water_dis = ['Flora', 'Steam', 'Storm'] #Water elemental offensive disadvantages
+water = [base_hp, base_mp, 1, 1.1, 1, water_adv, water_dis] #Overall water stats
 
-earth_atk = 1 #Earth elemental attack multiplier
-earth_def = 1.3 #Earth elemental defense multiplier
-earth_spd = 0.8 #Earth elemental speed multiplier
 earth_adv = ['Lightning', 'Plasma', 'Thunder', 'Storm'] #Earth elemental offensive advantages
 earth_dis = ['Wind', 'Magma', 'Flora'] #Earth elemental offensive disadvantages
+earth = [base_hp, base_mp, 1, 1.3, 0.8, earth_adv, earth_dis] #Overall earth stats
 
-wind_atk = 1 #Wind elemental attack multiplier
-wind_def = 0.9 #Wind elemental defense multiplier
-wind_spd = 1.2 #Wind elemental speed multiplier
 wind_adv = ['Smoke', 'Steam', 'Sand'] #Wind elemental offensive advantages
 wind_dis = ['Lightning', 'Ice', 'Crystal'] #Wind elemental offensive disadvantages
+wind = [base_hp, base_mp, 1, 0.9, 1.2, wind_adv, wind_dis] #Overall wind stats
 
-lightning_atk = 1 #Lightning elemental attack multiplier
-lightning_def = 0.8 #Lightning elemental defense multiplier
-lightning_spd = 1.3 #Lightning elemental speed multiplier
 lightning_adv = ['Wind', 'Water', 'Smoke'] #Lightning elemental offensive advantages
 lightning_dis = ['Plasma', 'Sand', 'Storm'] #Lightning elemental offensive disadvantages
+lightning = [base_hp, base_mp, 1, 0.8, 1.3, lightning_adv, lightning_dis] #Overall lightning stats
 
-fire = [fire_atk, fire_def, fire_spd, fire_adv, fire_dis]#defines
-water = [water_atk, water_def, water_spd, water_adv, water_dis]
-earth = [earth_atk, earth_def, earth_spd, earth_adv, earth_dis]
-wind = [wind_atk, wind_def, wind_spd, wind_adv, wind_dis]
-lightning = [lightning_atk, lightning_def, lightning_spd, lightning_adv, lightning_dis]
+#Delta Elementals [hp, mp, atk, def, spd, adv, dis]
 
-def is_base():
-    #Finds if an elemental is a base elemental. If yes, returns 1000 hp and 500 maximum mana. Otherwise, returns nothing.
-    base_elements = ['Fire', 'Wind', 'Earth', 'Lightning', 'Water']
-    if element in base_elements:
-        hp = 1000
-        mp = 500
-        return hp, mp
-    else:
-        return False
-<<<<<<< HEAD:Elementals.py
+magma_adv = ['Earth', 'Steam', 'Ice', 'Flora'] #Magma elemental offensive advantages
+magma_dis = ['Fire', 'Water', 'Thunder'] #Magma elemental defensive advantages
+magma = [850, 500, 1.4, 1, 0.7, magma_adv, magma_dis] #Overall magma stats
 
-def pick_first_elemental():
-    team_one_first = raw_input('Pick an Elemental')
-    if team_one_first == 'Water':
-        return water
-    elif team_one_first == 'Fire':
-        return fire
+smoke_adv = ['Lightning', 'Plasma', 'Flora'] #Smoke elemental offensive advantages
+smoke_dis = ['Wind', 'Steam', 'Ice'] #Smoke elemental offensive disadvantages
+smoke = [1100, 500, 0.8, 1.2, 1.1, smoke_adv, smoke_dis] #Overall smoke stats
 
-=======
->>>>>>> 0ea97092fb59d39d4f46354648dfd37364613a9b:assists_calcs.py
+plasma_adv = ['Wind', 'Water', 'Storm'] #Plasma elemental offensive advantages
+plasma_dis = ['Earth', 'Magma', 'Sand'] #Plasma elemental offensive disadvantages
+plasma = [650, 650, 1.3, 0.6, 1.2, plasma_adv, plasma_dis] #Overall plasma stats
+
+steam_adv = ['Smoke', 'Magma', 'Ice'] #Steam elemental offensive advantages
+steam_dis = ['Wind', 'Water', 'Thunder', 'Storm'] #Steam elemental offensive disadvantages
+steam = [900, 550, 1, 1.2, 0.9] #Overall steam stats
+
+sand_adv = ['Fire', 'Lightning', 'Magma', 'Plasma'] #Sand elemental offensive advantages
+sand_dis = ['Wind', 'Earth', 'Crystal'] #Sand elemental offensive disadvantages
+sand = [1200, 550, 1, 1.4, 0.7, sand_adv, sand_dis] #Overall sand stats
+
+thunder_adv = ['Wind', 'Water', 'Crystal'] #Thunder elemental offensive advantages
+thunder_dis = ['Earth', 'Sand', 'Lightning'] #Thunder elemental offensive disadvantages
+thunder = [1000, 600, 1.1, 1.1, 0.9, thunder_adv, thunder_dis] #Overall thunder stats
+
+ice_adv = ['Earth', 'Sand', 'Flora', 'Storm'] #Ice elemental offensive advantages
+ice_dis = ['Fire', 'Magma', 'Plasma'] #Ice elemental offensive disadvantages
+ice = [1200, 550, 1.3, 0.7, 1.1, ice_adv, ice_dis] #Overall ice stats
+
+def damage_calc():
+    '''This program will solve for damage dealt from an attack with a given base power
+        between two elementals.'''
+    end
+
+def data():
+    '''This program will provide all of the stats of an elemental when provided
+        with such an elemental.'''
+    end
