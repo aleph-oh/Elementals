@@ -50,14 +50,3 @@ def is_base():
         return hp, mp
     else:
         return False
-<<<<<<< HEAD:Elementals.py
-
-def pick_first_elemental():
-    team_one_first = raw_input('Pick an Elemental')
-    if team_one_first == 'Water':
-        return water
-    elif team_one_first == 'Fire':
-        return fire
-
-=======
->>>>>>> 0ea97092fb59d39d4f46354648dfd37364613a9b:assists_calcs.py
