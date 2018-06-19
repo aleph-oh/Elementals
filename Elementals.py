@@ -24,4 +24,3 @@ def is_base():
     else:
         return False
 
-qwertyqwertyuwertyertyuwer
