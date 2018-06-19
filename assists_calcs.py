@@ -41,7 +41,7 @@ plasma = [650, 650, 1.3, 0.6, 1.2, plasma_adv, plasma_dis] #Overall plasma stats
 
 steam_adv = ['Smoke', 'Magma', 'Ice'] #Steam elemental offensive advantages
 steam_dis = ['Wind', 'Water', 'Thunder', 'Storm'] #Steam elemental offensive disadvantages
-steam = [900, 550, 1, 1.2, 0.9] #Overall steam stats
+steam = [900, 550, 1, 1.2, 0.9, steam_adv, steam_dis] #Overall steam stats
 
 sand_adv = ['Fire', 'Lightning', 'Magma', 'Plasma'] #Sand elemental offensive advantages
 sand_dis = ['Wind', 'Earth', 'Crystal'] #Sand elemental offensive disadvantages
@@ -72,10 +72,12 @@ elemental_dict = {
     "Ice" : ice, 
     }
     
-def damage_calc():
+def damage_calc(elemental_atk=False, elemental_def=False):
     '''This program will solve for damage dealt from an attack with a given base power
-        between two elementals.'''
-    end
+        between two elementals. Like the program below it, it defaults to prompting for
+        which elementals are attacking and which are defending if no input is given.'''
+    #If elemental is False or otherwise not a string, the below if statement is triggered It asks the user which elemental they're interested in.
+
 
 def data(elemental=False):
     '''This program will provide all of the stats of an elemental when provided
@@ -86,5 +88,11 @@ def data(elemental=False):
     if type(elemental) != str:
         elemental = raw_input("Which elemental would you like data on? Please make sure only to capitalize the first letter.\n")
     stat_list = elemental_dict[elemental]
-    formatted_stat_list = elemental + "\n" + str(stat_list[0]) + " HP" + "\n" + str(stat_list[1]) + " Mana" + "\n"#Fix this newline formatting.
-    return formatted_stat_list
+    formatted_stat_list = elemental + "\n" + str(stat_list[0]) + " HP" + "\n" + str(stat_list[1]) + " Mana" + "\n" + str(stat_list[2]) + " ATK" + "\n" + str(stat_list[3]) + " DEF" + "\n" + str(stat_list[4]) + " SPD" + "\n"
+    
+    print formatted_stat_list + "Offensive Advantages: "
+    for x in stat_list[5]:
+        print x
+    print "Offensive Disadvantages: "
+    for x in stat_list[6]:
+        print x
