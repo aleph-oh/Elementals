@@ -63,6 +63,10 @@ flora_adv = ['Earth', 'Steam', 'Crystal'] #Flora elemental offensive advantages
 flora_dis = ['Fire', 'Smoke', 'Magma'] #Flora elemental offensive disadvantages
 flora = [750, 900, 0.9, 1, 1.2, flora_adv, flora_dis] #Overall flora stats
 
+storm_adv = ['Fire', 'Wind', 'Steam', 'Thunder']
+storm_dis = ['Lightning', 'Crystal']
+storm = [900, 500, 1.3, 1.1, 0.6, storm_adv, storm_dis]
+
 #Dictionary for converting strings describing an elemental into their stat arrays
 
 elemental_dict = {
@@ -80,6 +84,7 @@ elemental_dict = {
     "Ice" : ice, 
     "Crystal" : crystal,
     "Flora" : flora,
+    "Storm" : storm,
     }
     
 def damage_calc(elemental_atk=False, elemental_def=False, atk_change=False, def_change=False, base_power=False):
