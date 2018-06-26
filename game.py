@@ -100,15 +100,12 @@ def pick3(elemental1 = None, elemental2 = None, elemental3 = None):
     celestial_count = 0
     base_count = 0
     total_count = 0
+    elemental_list = []
     while total_count < 3:
-        elemental_list = []
         next_ele = raw_input("Choose an elemental. \n")
         if next_ele in elemental_list:
             next_ele = raw_input("Choose an elemental different from one you've already chosen. \n")
         if next_ele in delta:
-            if delta_count >= 2:
-                next_ele = raw_input("Choose an elemental which is not a delta elemental. Only 2 are allowed per side. \n.")
-            else:
                 delta_count += 1
                 total_count += 1
                 elemental_list.append(next_ele)
@@ -123,6 +120,10 @@ def pick3(elemental1 = None, elemental2 = None, elemental3 = None):
                 celestial_count += 1
                 total_count += 1
                 elemental_list.append(next_ele)
-
-
-
+        while total_count == 2 and base_count == 0:
+            next_ele = raw_input("Choose a base elemental. 1 is required per side. \n")
+            if next_ele in base:
+                total_count += 1
+                base_count += 1
+                elemental_list.append(next_ele)
+    print elemental_list
