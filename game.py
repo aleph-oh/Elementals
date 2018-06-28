@@ -98,7 +98,7 @@ celestial = ['Light', 'Dark', 'Aether']
 def pick3():
     '''This function allows for a side to pick 3 elementals fairly easily. It has
     all checks according to the rules implemented: A minimum of one base elemental is required,
-    repeats aren't allowed, and only one celestial is allowed.'''
+    repeats aren't allowed, and only one celestial is allowed.
     delta_count = 0
     celestial_count = 0
     base_count = 0
@@ -142,4 +142,4 @@ def pick3():
                 total_count += 1
                 base_count += 1
                 elemental_list.append(next_ele)
-    print elemental_list
+    print elemental_list'''
