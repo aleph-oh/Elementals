@@ -95,7 +95,10 @@ base = ['Fire', 'Water', 'Earth', 'Wind', 'Lightning']
 delta = ['Magma', 'Smoke', 'Plasma', 'Steam', 'Sand', 'Thunder', 'Ice', 'Crystal', 'Flora', 'Storm']
 celestial = ['Light', 'Dark', 'Aether']
 
-def pick3(elemental1 = None, elemental2 = None, elemental3 = None):
+def pick3():
+    '''This function allows for a side to pick 3 elementals fairly easily. It has
+    all checks according to the rules implemented: A minimum of one base elemental is required,
+    repeats aren't allowed, and only one celestial is allowed.'''
     delta_count = 0
     celestial_count = 0
     base_count = 0
@@ -113,13 +116,26 @@ def pick3(elemental1 = None, elemental2 = None, elemental3 = None):
             base_count += 1
             total_count += 1
             elemental_list.append(next_ele)
-        if next_ele in celestial:
-            if celestial_count >= 1:
-                next_ele = raw_input("Choose an elemental which is not a celestial elemental. Only 1 is allowed per side. \n")
-            else:
-                celestial_count += 1
+        if next_ele in celestial and celestial_count == 0:
+            celestial_count += 1
+            total_count += 1
+            elemental_list.append(next_ele)
+        while celestial_count == 1 and total_count < 3:
+            next_ele = raw_input("Choose an elemental which is not a celestial elemental. Only 1 is allowed per side. \n")
+            if next_ele in base:
                 total_count += 1
+                base_count += 1
                 elemental_list.append(next_ele)
+            if next_ele in delta:
+                total_count += 1
+                delta_count += 1
+                elemental_list.append(next_ele)
+            while total_count == 2 and base_count == 0:
+                next_ele = raw_input("Choose a base elemental. 1 is required per side. \n")
+                if next_ele in base:
+                    total_count += 1
+                    base_count += 1
+                    elemental_list.append(next_ele)
         while total_count == 2 and base_count == 0:
             next_ele = raw_input("Choose a base elemental. 1 is required per side. \n")
             if next_ele in base:
