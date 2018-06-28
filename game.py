@@ -92,54 +92,49 @@ elemental_dict = {
 #Defines the subset each elemental is from
 
 base = ['Fire', 'Water', 'Earth', 'Wind', 'Lightning']
-delta = ['Magma', 'Smoke', 'Plasma', 'Steam', 'Sand', 'Thunder', 'Ice', 'Crystal', 'Flora', 'Storm']
+delta = ['Magma', 'Smoke', 'Plasma', 'Steam', 'Sand', 'Thunder', 'Ice', 'Crystal', 'Flora', 'Storm', 'Aether']
 celestial = ['Light', 'Dark', 'Aether']
 
 def pick3():
     '''This function allows for a side to pick 3 elementals fairly easily. It has
     all checks according to the rules implemented: A minimum of one base elemental is required,
-    repeats aren't allowed, and only one celestial is allowed.
+    repeats aren't allowed, and only one celestial is allowed.'''
     delta_count = 0
     celestial_count = 0
     base_count = 0
-    total_count = 0
     elemental_list = []
-    while total_count < 3:
+    print '''This function assumes that you capitalize only the first letter of the type of elemental, do not use spaces at all, and spell the name of the elemental correctly. If you do not, this function will not work.'''
+    while len(elemental_list) < 3:
         next_ele = raw_input("Choose an elemental. \n")
         if next_ele in elemental_list:
-            next_ele = raw_input("Choose an elemental different from one you've already chosen. \n")
+            while next_ele in elemental_list:
+                next_ele = raw_input("Choose an elemental different from one you've already chosen. \n")
         if next_ele in delta:
                 delta_count += 1
-                total_count += 1
                 elemental_list.append(next_ele)
         if next_ele in base:
             base_count += 1
-            total_count += 1
             elemental_list.append(next_ele)
         if next_ele in celestial and celestial_count == 0:
             celestial_count += 1
-            total_count += 1
             elemental_list.append(next_ele)
-        while celestial_count == 1 and total_count < 3:
+        while celestial_count == 1 and len(elemental_list) < 3:
             next_ele = raw_input("Choose an elemental which is not a celestial elemental. Only 1 is allowed per side. \n")
-            if next_ele in base:
-                total_count += 1
-                base_count += 1
-                elemental_list.append(next_ele)
-            if next_ele in delta:
-                total_count += 1
-                delta_count += 1
-                elemental_list.append(next_ele)
-            while total_count == 2 and base_count == 0:
-                next_ele = raw_input("Choose a base elemental. 1 is required per side. \n")
+            if next_ele not in elemental_list:
                 if next_ele in base:
-                    total_count += 1
                     base_count += 1
                     elemental_list.append(next_ele)
-        while total_count == 2 and base_count == 0:
+                if next_ele in delta:
+                    delta_count += 1
+                    elemental_list.append(next_ele)
+            while len(elemental_list) == 2 and base_count == 0:
+                next_ele = raw_input("Choose a base elemental. 1 is required per side. \n")
+                if next_ele in base:
+                    base_count += 1
+                    elemental_list.append(next_ele)
+        while len(elemental_list) == 2 and base_count == 0:
             next_ele = raw_input("Choose a base elemental. 1 is required per side. \n")
             if next_ele in base:
-                total_count += 1
                 base_count += 1
                 elemental_list.append(next_ele)
-    print elemental_list'''
+    print elemental_list
