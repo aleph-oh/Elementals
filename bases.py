@@ -6,6 +6,7 @@ from typing import Set
 
 import enums
 from elemental_data import ElementalData
+from type_matchups import MATCHUPS
 
 
 class IllegalAbilityException(Exception):
@@ -82,4 +83,4 @@ class SimpleElemental:
         Return the value of the matchup enum corresponding to if self has advantage against
         other
         """
-        pass  # TODO: look in matchup table
+        return MATCHUPS[self.kind][other.kind]

@@ -4,7 +4,7 @@ from enums import ElementalType
 
 
 class ElementalData:
-    """A class representing the internal data of an elemental"""
+    """A class representing the internal data of an elemental."""
 
     def __init__(self, health: int, mana: int, attack: Fraction,
                  defense: Fraction, speed: Fraction):
