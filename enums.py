@@ -20,3 +20,9 @@ class ElementalType(Enum):
     CRYSTAL = 13
     FLORA = 14
     STORM = 15
+
+
+class Matchup(Enum):
+    Advantage = 1
+    Neutral = 2
+    Disadvantage = 3
