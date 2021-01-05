@@ -5,35 +5,35 @@ from fractions import Fraction
 
 class Elemental(abc.ABC):
     """
-    An abstract base class representing an arbitrary elemental. API subject to change.
+    An abstract base class representing an arbitrary elemental. API unstable: may expand.
     """
 
     @abc.abstractmethod
     @property
-    def name(self) -> enums.ElementalName:
+    def kind(self) -> enums.ElementalType:
         pass
 
     @abc.abstractmethod
     @property
-    def hp(self) -> int:
+    def health(self) -> int:
         pass
 
     @abc.abstractmethod
     @property
-    def mp(self) -> int:
+    def mana(self) -> int:
         pass
 
     @abc.abstractmethod
     @property
-    def atk(self) -> Fraction:
+    def attack(self) -> Fraction:
         pass
 
     @abc.abstractmethod
     @property
-    def dfn(self) -> Fraction:
+    def defense(self) -> Fraction:
         pass
 
     @abc.abstractmethod
     @property
-    def spd(self) -> Fraction:
+    def speed(self) -> Fraction:
         pass

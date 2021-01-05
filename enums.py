@@ -1,20 +1,22 @@
 from enum import Enum
 
 
-class ElementalName(Enum):
+class ElementalType(Enum):
+    # Normal
     FIRE = 1
     WATER = 2
     EARTH = 3
     WIND = 4
     LIGHTNING = 5
 
+    # Delta
     MAGMA = 6
-    SMOKE = 6
-    PLASMA = 7
-    STEAM = 8
-    SAND = 9
-    THUNDER = 10
-    ICE = 11
-    CRYSTAL = 12
-    FLORA = 13
-    STORM = 14
+    SMOKE = 7
+    PLASMA = 8
+    STEAM = 9
+    SAND = 10
+    THUNDER = 11
+    ICE = 12
+    CRYSTAL = 13
+    FLORA = 14
+    STORM = 15
