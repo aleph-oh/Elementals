@@ -12,7 +12,7 @@ FIRE_SPD = (1, 1)
 
 class Fire(Elemental):
     """
-    A fire elemental
+    A fire elemental.
     """
 
     __slots__ = ["_name", "_hp", "_mp", "_atk", "_def", "_spd"]
