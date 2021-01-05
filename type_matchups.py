@@ -4,12 +4,34 @@ from typing import Dict, Iterator, Set
 from enums import ElementalType, Matchup
 
 
+class UncoveredElementalException(Exception):
+    """Occurs if a matchup-to-types mapping contains fewer elementals than
+    are present in the ElementalType enum."""
+    pass
+
+
+class DuplicateElementalError(Exception):
+    """Indicates that an elemental has two conflicting type matchups against another."""
+    pass
+
+
 class MatchupTable(collections.Mapping):
 
     __slots__ = ["_matchups"]
 
     def __init__(self, matchup_to_types: Dict[Matchup, Set[ElementalType]]):
-        self._matchups = {v: k for k, vs in matchup_to_types.items() for v in vs}
+        self._matchups: Dict[ElementalType, Matchup] = \
+            {v: k for k, vs in matchup_to_types.items() for v in vs}
+        for kind in self._matchups:
+            present_in = 0
+            for types in matchup_to_types.values():
+                if kind in types:
+                    present_in += 1
+            if present_in == 0:
+                raise UncoveredElementalException(f"Did not find a matchup for {kind.name}")
+            elif present_in > 1:
+                raise DuplicateElementalError(f"Found mappings for {kind.name} to more than "
+                                              f"one matchup")
 
     def __getitem__(self, k: ElementalType) -> Matchup:
         return self._matchups[k]

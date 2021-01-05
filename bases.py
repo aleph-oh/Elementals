@@ -76,7 +76,7 @@ class SimpleElemental:
 
     @property
     def abilities(self) -> Set[Ability]:
-        return self._abilities.copy()
+        return self._abilities.copy()  # avoid aliasing
 
     def matchup(self, other: 'SimpleElemental') -> enums.Matchup:
         """
