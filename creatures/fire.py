@@ -1,6 +1,6 @@
 from fractions import Fraction
 
-from enums import ElementalType
+from enums import ElementalName
 from elemental import Elemental
 
 FIRE_HP = 1000
@@ -11,10 +11,14 @@ FIRE_SPD = 1
 
 
 class Fire(Elemental):
+    """
+    A fire elemental
+    """
+
     __slots__ = ["_name", "_hp", "_mp", "_atk", "_def", "_spd"]
 
     def __init__(self):
-        self._name = ElementalType.FIRE
+        self._name = ElementalName.FIRE
         self._hp = FIRE_HP
         self._mp = FIRE_MP
         self._atk = Fraction(FIRE_ATK)
@@ -22,7 +26,7 @@ class Fire(Elemental):
         self._spd = Fraction(FIRE_SPD)
 
     @property
-    def name(self) -> ElementalType:
+    def name(self) -> ElementalName:
         return self._name
 
     @property

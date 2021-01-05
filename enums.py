@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ElementalType(Enum):
+class ElementalName(Enum):
     FIRE = 1
     WATER = 2
     EARTH = 3

@@ -4,10 +4,13 @@ from fractions import Fraction
 
 
 class Elemental(abc.ABC):
+    """
+    An abstract base class representing an arbitrary elemental. API subject to change.
+    """
 
     @abc.abstractmethod
     @property
-    def name(self) -> enums.ElementalType:
+    def name(self) -> enums.ElementalName:
         pass
 
     @abc.abstractmethod
