@@ -1,3 +1,4 @@
+from collections import Iterable
 from enum import Enum, auto
 from fractions import Fraction
 from typing import Any, Optional, Set, Tuple
@@ -6,21 +7,23 @@ from abilities import AbilityData
 
 
 class Effects:
-    """A mutable type representing all effects presently applied to an elemental."""
+    """A mutable type representing all new_effects presently applied to an elemental."""
 
-    __slots__ = ["_effects"]
+    # TODO: make new_effects non permanent so they track remaining turns, or something similar
 
-    def __init__(self, effects: Set["Effect"]) -> None:
+    __slots__ = ["_end_this_round", "_end_next_round"]
+
+    def __init__(self, this_round: Set["Effect"], next_round: Set["Effect"]) -> None:
         """
-        Construct a new Effects object with the effects in `effects`
+        Construct a new Effects object with the new_effects in `new_effects`
 
-        :param effects: the effects presently applied to this elemental
+        :param new_effects: the new_effects presently applied to this elemental
         """
-        self._effects = effects.copy()
+        self._end_this_round = this_round.copy()
+        self._end_next_round = next_round.copy()
 
     def reset(self) -> None:
         """Clear all modifiers, emptying this type."""
-        self._effects = set()
 
     def can_use(self, ability: AbilityData) -> bool:
         """
@@ -29,7 +32,8 @@ class Effects:
         :param ability: the ability to check if can be used
         :return: true if can be used, false otherwise
         """
-        for e in self._effects:
+        effects = self._end_this_round | self._end_next_round
+        for e in effects:
             if (ability.is_attack and e.no_attack) or (
                 ability.is_support and e.no_support
             ):
@@ -60,7 +64,11 @@ class Effects:
                             object.
         :return: the *target_stat* modifier resulting from this Effects object
         """
-        return sum(e.mod for e in self._effects if e.affected == target_stat)
+        return sum(
+            e.mod
+            for e in (self._end_this_round | self._end_next_round)
+            if e.affected == target_stat
+        )
 
     def add(self, effect: "Effect") -> None:
         """
@@ -68,7 +76,24 @@ class Effects:
 
         :param effect: the effect to add
         """
-        self._effects.add(effect)
+        self._end_next_round.add(effect)
+
+    def extend(self, new_effects: Iterable["Effect"]) -> None:
+        """
+        Extend the effects in this object with `new_effects`
+
+        :param new_effects: effects to add to this Effects object
+        """
+        for e in new_effects:
+            self._end_next_round.add(e)
+
+    def __iter__(self) -> Iterable["Effect"]:
+        yield from self._end_this_round | self._end_next_round
+
+    def end_round(self) -> None:
+        """Mutates this Effects objects by ending the present round."""
+        self._end_this_round = self._end_next_round.copy()
+        self._end_next_round = set()
 
 
 class IllegalEffectError(Exception):

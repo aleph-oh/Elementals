@@ -123,6 +123,6 @@ class Matchup(Enum):
     attacking another.
     """
 
-    Advantage = 1
-    Neutral = 2
-    Disadvantage = 3
+    Advantage = Fraction(12, 10)
+    Neutral = Fraction(10, 10)
+    Disadvantage = Fraction(8, 10)

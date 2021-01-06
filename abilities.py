@@ -1,7 +1,11 @@
+import math
 from enum import Enum
-from typing import List, TYPE_CHECKING, Tuple
+from fractions import Fraction
+from typing import List, TYPE_CHECKING, Tuple, Union
 
+from barriers import AllBarrier, SingleBarrier, _Barrier
 from effects import BURN, Effect
+from enums import ElementalType
 
 if TYPE_CHECKING:
     from simple_elemental import SimpleElemental
@@ -13,55 +17,147 @@ class IllegalAbilityError(Exception):
     pass
 
 
+class TargetCountMismatchError(Exception):
+    """Indicates that an ability was used on more targets than it can be used on."""
+
+    pass
+
+
+class NoTargetsError(Exception):
+    """Indicates that an ability was used with no targets."""
+
+    pass
+
+
 class AbilityData:
     """
     An immutable type representing the data for the ability of an elemental.
+
+    Despite the mutability of barriers, we only provide copies of the stored barrier and never
+    modify the internal barrier. All other fields are immutable and never redefined.
     """
 
-    __slots__ = ["_dmg", "_effects", "_mp", "_barrier", "_targets"]
+    __slots__ = [
+        "_dmg",
+        "_effects",
+        "_mp",
+        "_barrier",
+        "_targets",
+        "_level",
+        "_ignore_when_thunder",
+    ]
 
     def __init__(
         self,
         damage: int,
         effects: Tuple[Effect, ...],
         mana: int,
-        barrier: int,
+        barrier: Union[int, _Barrier],
         targets: "Targets",
-        level: int
+        level: int,
+        ignore_barrier_when_thunder: bool = False,
     ) -> None:
         """
         Construct a new ability.
 
         :param damage: the damage the ability deals; negative damage is healing
-        :param effects: the effects of this ability
+        :param effects: the new_effects of this ability
         :param mana: the mana cost of the ability; negative mana recharges mana
-        :param barrier: non-zero if ability creates a barrier, otherwise zero
+        :param barrier: non-zero if ability creates a barrier, otherwise zero; can also be an
+                        explicit Barrier, in which case a copy of that barrier is used
         :param targets: how many elementals this ability targets
         :param level: the level an ability is learned at
+        :param ignore_barrier_when_thunder: if this ability ignores barriers when used by a
+                                            thunder elemental
         """
         self._dmg = damage
         self._effects = effects
         self._mp = mana
-        self._barrier = barrier
+        self._barrier: _Barrier
+        if isinstance(barrier, int):
+            barrier_health = barrier
+            if targets is Targets.All:
+                self._barrier = AllBarrier(barrier_health, ())
+            elif targets is Targets.Single:
+                self._barrier = SingleBarrier(barrier_health, ())
+            else:
+                assert False, "Shouldn't get here"
+        else:
+            self._barrier = barrier.copy()
         self._targets = targets
+        self._level = level
+        self._ignore_when_thunder = ignore_barrier_when_thunder
 
     def apply(
         self, source: "SimpleElemental", targets: List["SimpleElemental"]
     ) -> None:
         """
-        Apply an ability and its effects to targets, originating from (and deducting mp from)
+        Apply an ability and its new_effects to targets, originating from (and deducting mp
+        from)
         source.
+
+        If a target is protected by a barrier, unless damage bleeds through the barrier,
+        negative new_effects cannot go through, although positive new_effects can. However,
+        damage
+        bleeding through means new_effects can occur.
 
         :param source: the elemental using the ability (is mutated)
         :param targets: the elemental(s) being targeted by this ability (is mutated)
         :raises IllegalAbilityError: if `source` cannot use this ability for any reason
+        :raises TargetCountMismatchError: if this ability has fewer targets than len(targets)
+        :raises NoTargetsError: if targets has no elements
         """
-        # TODO: don't barriers mean these moves have to be applied at a board level?
-        raise NotImplementedError
+        if not targets:
+            raise NoTargetsError("No targets found")
+        if not source.can_use(self):
+            raise IllegalAbilityError(
+                f"This {source.kind.name} cannot use this ability"
+            )
+        if self._targets == Targets.Single and len(targets) > 1:
+            raise TargetCountMismatchError(
+                f"This ability is single-target but {len(targets)} "
+                f"elementals are being targeted"
+            )
+        if self.is_attack:
+            if source.kind == ElementalType.Thunder and self._ignore_when_thunder:
+                to_each = [self._dmg for _ in targets]
+            else:
+                damage_to_all = self._dmg * len(targets)
+                through_all_single = int(
+                    math.ceil(targets[0].all_barrier.harm(damage_to_all) / len(targets))
+                )
+                source.apply_effects(targets[0].all_barrier.effects_on_hit)
+                to_each = [t.single_barrier.harm(through_all_single) for t in targets]
+            for t, raw_damage in zip(targets, to_each):
+                matchup_multiplier: Fraction = source.matchup(t).value
+                multiplier = (source.attack * matchup_multiplier) / t.defense
+                damage = int(math.ceil(multiplier * raw_damage))
+                t.harm(damage)
+                if damage > 0:
+                    t.apply_effects(self._effects)
+        else:
+            for t in targets:
+                to_heal = -1 * self._dmg
+                t.heal(to_heal)
+                t.apply_effects(self._effects)  # we assume only positive new_effects
+
+        # Apply barriers
+        barrier = self._barrier.copy()
+        for t in targets:
+            if targets == Targets.All:
+                t.all_barrier = barrier
+            elif targets == Targets.Single:
+                t.single_barrier = barrier.copy()
+            else:
+                assert False, "Shouldn't get here"
 
     @property
     def damage(self) -> int:
         return self._dmg
+
+    @property
+    def level(self) -> int:
+        return self._level
 
     @property
     def is_attack(self) -> bool:
@@ -80,6 +176,7 @@ class AbilityData:
 
 class Targets(Enum):
     """An enumeration of how many targets an ability affects"""
+
     Single = 1
     All = 2
 

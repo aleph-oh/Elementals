@@ -1,8 +1,10 @@
+from collections import Iterable
 from fractions import Fraction
-from typing import Set, TYPE_CHECKING
+from typing import Optional, Set, TYPE_CHECKING
 
 import enums
-from effects import Effects
+from barriers import AllBarrier, _Barrier, SingleBarrier
+from effects import Effect, Effects
 from elemental_data import ElementalData
 from type_matchups import MATCHUPS
 
@@ -15,7 +17,16 @@ class SimpleElemental:
     A mutable type representing a normal or delta elemental.
     """
 
-    __slots__ = ["_kind", "_hp", "_mp", "_base_stats", "_effects", "_abilities"]
+    __slots__ = [
+        "_kind",
+        "_hp",
+        "_mp",
+        "_all_barrier",
+        "_single_barrier",
+        "_base_stats",
+        "_effects",
+        "_abilities",
+    ]
 
     def __init__(self, kind: enums.ElementalType, stats: ElementalData) -> None:
         """
@@ -27,8 +38,10 @@ class SimpleElemental:
         self._kind = kind
         self._hp = stats.health
         self._mp = stats.mana
+        self._all_barrier: AllBarrier = AllBarrier.empty()
+        self._single_barrier: SingleBarrier = SingleBarrier.empty()
         self._base_stats = stats
-        self._effects = Effects(effects=set())
+        self._effects = Effects(this_round=set(), next_round=set())
         self._abilities = set()
 
     @property
@@ -72,3 +85,67 @@ class SimpleElemental:
         :return: true if this elemental can use `ability`
         """
         return ability in self.abilities and self._effects.can_use(ability=ability)
+
+    def harm(self, damage: int) -> None:
+        """
+        Apply maximally `damage` to this SimpleElemental, setting health to either 0 or the
+        elemental's remaining health, if positive.
+
+        :param damage: the amount of damage to apply to this SimpleElemental
+        :raises ValueError: if damage is negative
+        """
+        if damage > 0:
+            raise ValueError("Cannot damage by negative damage")
+        self._hp = max(0, self._hp - damage)
+
+    def heal(self, health: int) -> None:
+        """
+        Heal this SimpleElemental by `health`
+
+        :param health: the amount to heal by
+        :raises ValueError: if health is negative
+        """
+        if health < 0:
+            raise ValueError("Cannot heal by negative health")
+        self._hp += health
+
+    def apply_effects(self, new_effects: Iterable[Effect]) -> None:
+        """
+        Apply the effects in new_effects to this SimpleElemental.
+
+        :param new_effects: new_effects to apply
+        """
+        self._effects.extend(new_effects)
+
+    @property
+    def single_barrier(self) -> SingleBarrier:
+        """
+        :return: a mutable view into this elemental's barrier protecting solely itself
+        """
+        return self._single_barrier
+
+    @single_barrier.setter
+    def single_barrier(self, new: SingleBarrier) -> None:
+        """
+        Replace this elemental's barrier protecting solely itself with `new`
+
+        :param new: the barrier to replace the old barrier with
+        """
+        self._single_barrier = new.copy()
+
+    @property
+    def all_barrier(self) -> AllBarrier:
+        """
+        :return: a mutable view into this elemental's barrier protecting all elementals on its
+                side
+        """
+        return self._all_barrier
+
+    @all_barrier.setter
+    def all_barrier(self, new: AllBarrier) -> None:
+        """
+        Replace this elemental's barrier protecting all allies on its side with `new`
+
+        :param new: the barrier to replace the old barrier with
+        """
+        self._all_barrier = new
