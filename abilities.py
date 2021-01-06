@@ -27,6 +27,7 @@ class AbilityData:
         mana: int,
         barrier: int,
         targets: "Targets",
+        level: int
     ) -> None:
         """
         Construct a new ability.
@@ -36,6 +37,7 @@ class AbilityData:
         :param mana: the mana cost of the ability; negative mana recharges mana
         :param barrier: non-zero if ability creates a barrier, otherwise zero
         :param targets: how many elementals this ability targets
+        :param level: the level an ability is learned at
         """
         self._dmg = damage
         self._effects = effects
@@ -54,6 +56,7 @@ class AbilityData:
         :param targets: the elemental(s) being targeted by this ability (is mutated)
         :raises IllegalAbilityError: if `source` cannot use this ability for any reason
         """
+        # TODO: don't barriers mean these moves have to be applied at a board level?
         raise NotImplementedError
 
     @property
@@ -76,6 +79,7 @@ class AbilityData:
 
 
 class Targets(Enum):
+    """An enumeration of how many targets an ability affects"""
     Single = 1
     All = 2
 
@@ -84,35 +88,35 @@ class Ability(Enum):
     """An enumeration of all available abilities"""
 
     Ember = AbilityData(
-        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single
+        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
     )
     Blaze = AbilityData(
-        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single
+        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single, level=3
     )
     Fireball = AbilityData(
-        damage=50, effects=(), mana=30, barrier=0, targets=Targets.Single
+        damage=50, effects=(), mana=30, barrier=0, targets=Targets.Single, level=6
     )
     Flamethrower = AbilityData(
-        damage=50, effects=(BURN,), mana=50, barrier=0, targets=Targets.Single
+        damage=50, effects=(BURN,), mana=50, barrier=0, targets=Targets.Single, level=9
     )
     Firewall = AbilityData(
-        damage=0, effects=(), mana=50, barrier=80, targets=Targets.Single
+        damage=0, effects=(), mana=50, barrier=80, targets=Targets.Single, level=12
     )
     FlareBurst = AbilityData(
-        damage=80, effects=(BURN,), mana=80, barrier=0, targets=Targets.Single
+        damage=80, effects=(BURN,), mana=80, barrier=0, targets=Targets.Single, level=15
     )
     Wildfire = AbilityData(
-        damage=100, effects=(), mana=100, barrier=0, targets=Targets.All
+        damage=100, effects=(), mana=100, barrier=0, targets=Targets.All, level=18
     )
     Sunlight = AbilityData(
-        damage=-100, effects=(), mana=80, barrier=0, targets=Targets.Single
+        damage=-100, effects=(), mana=80, barrier=0, targets=Targets.Single, level=21
     )
     Meteorite = AbilityData(
-        damage=150, effects=(), mana=100, barrier=0, targets=Targets.Single
+        damage=150, effects=(), mana=100, barrier=0, targets=Targets.Single, level=24
     )
     Inferno = AbilityData(
-        damage=200, effects=(), mana=150, barrier=0, targets=Targets.Single
+        damage=200, effects=(), mana=150, barrier=0, targets=Targets.Single, level=27
     )
     MeteorRain = AbilityData(
-        damage=200, effects=(), mana=200, barrier=0, targets=Targets.All
+        damage=200, effects=(), mana=200, barrier=0, targets=Targets.All, level=30
     )
