@@ -1,8 +1,8 @@
-from enum import Enum
+from enum import Enum, auto
 from fractions import Fraction
 from typing import Any, Optional, Set, Tuple
 
-from abilities import Ability
+from abilities import AbilityData
 
 
 class Effects:
@@ -18,11 +18,11 @@ class Effects:
         """
         self._effects = effects.copy()
 
-    def restore(self) -> None:
+    def reset(self) -> None:
         """Clear all modifiers, emptying this type."""
         self._effects = set()
 
-    def can_use(self, ability: Ability) -> bool:
+    def can_use(self, ability: AbilityData) -> bool:
         """
         Check if `ability` can be used according to constraints from this Effects object.
 
@@ -30,8 +30,8 @@ class Effects:
         :return: true if can be used, false otherwise
         """
         for e in self._effects:
-            if (ability.is_attack() and e.no_attack) or (
-                ability.is_support() and e.no_support
+            if (ability.is_attack and e.no_attack) or (
+                ability.is_support and e.no_support
             ):
                 return False
         return True
@@ -58,9 +58,9 @@ class Effects:
         """
         :param target_stat: the stat to find the modifier of, resulting from this Effects
                             object.
-        :return: the `target_stat` modifier resulting from this Effects object
+        :return: the *target_stat* modifier resulting from this Effects object
         """
-        return sum((e.mod for e in self._effects if e.affected == target_stat))
+        return sum(e.mod for e in self._effects if e.affected == target_stat)
 
     def add(self, effect: "Effect") -> None:
         """
@@ -118,7 +118,7 @@ class Effect:
             self._mod = None
         self._no_attack = no_attack
         self._no_support = no_support
-        affecting += (no_attack or no_support)  # booleans are 1 if true, 0 if false
+        affecting += no_attack or no_support  # booleans are 1 if true, 0 if false
         if affecting < 1:
             raise IllegalEffectError("This effect modifies nothing")
         elif affecting > 1:
@@ -154,23 +154,29 @@ class Effect:
 
 
 class Status(Enum):
-    Burn = (1,)
-    Paralysis = (2,)
-    Poison = (3,)
-    Frost = (4,)
-    Daze = (5,)
-    Rage = (6,)
-    Tailwind = (7,)
-    ElectronFlow = (8,)
-    AquaShield = (9,)
+    Burn = 1
+    Paralysis = 2
+    Poison = 3
+    Frost = 4
+    Daze = 5
+    Rage = 6
+    Tailwind = 7
+    ElectronFlow = 8
+    AquaShield = 9
 
 
 class Stat(Enum):
-    Health = (1,)
-    Mana = (2,)
-    Attack = (3,)
-    Defense = (4,)
-    Speed = 5
+    """"""
+
+    Health = auto()
+    Mana = auto()
+    Attack = auto()
+    Defense = auto()
+    Speed = auto()
+
+
+# These aren't enum values because that would be a circular definition
+# TODO: fix this?
 
 
 BURN = Effect((Stat.Attack, Fraction(-2, 10)), Status.Burn, False, False)
