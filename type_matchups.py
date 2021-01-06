@@ -1,11 +1,10 @@
-import collections
-from typing import Dict, Iterator, Set
+from typing import Dict, Set
 
 from enums import ElementalType, Matchup
 
 
-class UncoveredElementalException(Exception):
-    """Occurs if a matchup-to-types mapping contains fewer elementals than
+class UncoveredElementalError(Exception):
+    """Indicates that a matchup-to-types mapping contains fewer elementals than
     are present in the ElementalType enum."""
     pass
 
@@ -15,34 +14,45 @@ class DuplicateElementalError(Exception):
     pass
 
 
-class MatchupTable(collections.Mapping):
+class MatchupTable:
+    """A class representing the type matchups of a given enum kind."""
 
     __slots__ = ["_matchups"]
 
-    def __init__(self, matchup_to_types: Dict[Matchup, Set[ElementalType]]):
-        self._matchups: Dict[ElementalType, Matchup] = \
-            {v: k for k, vs in matchup_to_types.items() for v in vs}
-        for kind in self._matchups:
+    def __init__(self, matchup_to_types: Dict[Matchup, Set[ElementalType]]) -> None:
+        """
+        Construct a new matchup table from `matchup_to_types`.
+
+        `matchup_to_types` must contain a mapping to all types from exactly one matchup.
+
+        :param matchup_to_types: mapping of matchups to types which have that matchup
+        :raises UncoveredElementalError: if the mapping doesn't cover a given elemental type
+        :raises DuplicateElementalError: if the mapping has some elemental type which is in the
+                                         value corresponding to more than one matchup
+        """
+        for kind in ElementalType:
             present_in = 0
             for types in matchup_to_types.values():
                 if kind in types:
                     present_in += 1
             if present_in == 0:
-                raise UncoveredElementalException(f"Did not find a matchup for {kind.name}")
+                raise UncoveredElementalError(f"Did not find a matchup for {kind.name}")
             elif present_in > 1:
-                raise DuplicateElementalError(f"Found mappings for {kind.name} to more than "
-                                              f"one matchup")
+                raise DuplicateElementalError(f"Found mappings for {kind.name} to more "
+                                              f"than one matchup")
+        self._matchups: Dict[ElementalType, Matchup] = \
+            {v: k for k, vs in matchup_to_types.items() for v in vs}
 
-    def __getitem__(self, k: ElementalType) -> Matchup:
-        return self._matchups[k]
-
-    def __len__(self) -> int:
-        return len(self._matchups)
-
-    def __iter__(self) -> Iterator[ElementalType]:
-        yield from self._matchups
+    def __getitem__(self, t: ElementalType) -> Matchup:
+        """Get the matchup corresponding to the elemental type `t` stored in this table."""
+        return self._matchups[t]
 
 
+# noinspection DuplicatedCode,DuplicatedCode,DuplicatedCode,DuplicatedCode,DuplicatedCode,
+# DuplicatedCode
+# noinspection DuplicatedCode,DuplicatedCode,DuplicatedCode,DuplicatedCode,DuplicatedCode,
+# DuplicatedCode
+# noinspection DuplicatedCode,DuplicatedCode
 MATCHUPS = {
     ElementalType.FIRE: MatchupTable(matchup_to_types={
         Matchup.Neutral: {

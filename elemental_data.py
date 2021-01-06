@@ -4,10 +4,11 @@ from enums import ElementalType
 
 
 class ElementalData:
-    """A class representing the internal data of an elemental."""
+    """An immutable type representing the base stats of an elemental."""
 
     def __init__(self, health: int, mana: int, attack: Fraction,
-                 defense: Fraction, speed: Fraction):
+                 defense: Fraction, speed: Fraction) -> None:
+        """Construct a new ElementalData with the provided data."""
         self._hp = health
         self._mp = mana
         self._atk = attack
