@@ -1,7 +1,8 @@
 from enum import Enum
-from typing import List
+from typing import List, TYPE_CHECKING
 
-from simple_elemental import SimpleElemental
+if TYPE_CHECKING:
+    from simple_elemental import SimpleElemental
 
 
 class IllegalAbilityError(Exception):

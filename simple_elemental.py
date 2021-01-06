@@ -1,11 +1,13 @@
 from fractions import Fraction
-from typing import Set
+from typing import Set, TYPE_CHECKING
 
 import enums
-from abilities import Ability
 from effects import Effects
 from elemental_data import ElementalData
 from type_matchups import MATCHUPS
+
+if TYPE_CHECKING:
+    from abilities import Ability
 
 
 class SimpleElemental:
@@ -48,7 +50,7 @@ class SimpleElemental:
         return self._base_stats.speed
 
     @property
-    def abilities(self) -> Set[Ability]:
+    def abilities(self) -> Set["Ability"]:
         return self._abilities.copy()  # avoid aliasing
 
     def matchup(self, other: "SimpleElemental") -> enums.Matchup:
@@ -58,5 +60,5 @@ class SimpleElemental:
         """
         return MATCHUPS[self.kind][other.kind]
 
-    def can_use(self, ability: Ability) -> bool:
+    def can_use(self, ability: "Ability") -> bool:
         return ability in self.abilities and self._effects.can_use(ability=ability)

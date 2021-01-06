@@ -118,7 +118,7 @@ class Effect:
             self._mod = None
         self._no_attack = no_attack
         self._no_support = no_support
-        affecting += no_attack + no_support  # booleans are 1 if true, 0 if false
+        affecting += (no_attack or no_support)  # booleans are 1 if true, 0 if false
         if affecting < 1:
             raise IllegalEffectError("This effect modifies nothing")
         elif affecting > 1:
