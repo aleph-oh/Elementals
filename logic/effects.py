@@ -1,35 +1,35 @@
 from enum import Enum, auto
 from fractions import Fraction
-from typing import Any, Optional, Set, Tuple
+from typing import Any, Optional, Set, Tuple, Iterable, TYPE_CHECKING
 
-from abilities import AbilityData
+if TYPE_CHECKING:
+    from .abilities import AbilityData
 
 
 class Effects:
-    """A mutable type representing all effects presently applied to an elemental."""
+    """A mutable type representing all new_effects presently applied to an elemental."""
 
-    __slots__ = ["_effects"]
+    __slots__ = ["_end_this_round", "_end_next_round"]
 
-    def __init__(self, effects: Set["Effect"]) -> None:
+    def __init__(self, this_round: Set["Effect"], next_round: Set["Effect"]) -> None:
         """
-        Construct a new Effects object with the effects in `effects`
+        Construct a new Effects object with the effects in `this_round` and `next_round`.
 
-        :param effects: the effects presently applied to this elemental
+        :param this_round: effects which will end this round
+        :param next_round: effects which will end next round
         """
-        self._effects = effects.copy()
+        self._end_this_round = this_round.copy()
+        self._end_next_round = next_round.copy()
 
-    def reset(self) -> None:
-        """Clear all modifiers, emptying this type."""
-        self._effects = set()
-
-    def can_use(self, ability: AbilityData) -> bool:
+    def can_use(self, ability: "AbilityData") -> bool:
         """
         Check if `ability` can be used according to constraints from this Effects object.
 
         :param ability: the ability to check if can be used
         :return: true if can be used, false otherwise
         """
-        for e in self._effects:
+        effects = self._end_this_round | self._end_next_round
+        for e in effects:
             if (ability.is_attack and e.no_attack) or (
                 ability.is_support and e.no_support
             ):
@@ -60,15 +60,28 @@ class Effects:
                             object.
         :return: the *target_stat* modifier resulting from this Effects object
         """
-        return sum(e.mod for e in self._effects if e.affected == target_stat)
+        return sum(
+            e.mod
+            for e in (self._end_this_round | self._end_next_round)
+            if e.affected == target_stat
+        )
 
-    def add(self, effect: "Effect") -> None:
+    def extend(self, new_effects: 'Iterable["Effect"]') -> None:
         """
-        Add an effect to this Effects object.
+        Extend the effects in this object with `new_effects`
 
-        :param effect: the effect to add
+        :param new_effects: effects to add to this Effects object
         """
-        self._effects.add(effect)
+        for e in new_effects:
+            self._end_next_round.add(e)
+
+    def __iter__(self) -> 'Iterable["Effect"]':
+        yield from self._end_this_round | self._end_next_round
+
+    def end_round(self) -> None:
+        """Mutates this Effects objects by ending the present round."""
+        self._end_this_round = self._end_next_round.copy()
+        self._end_next_round = set()
 
 
 class IllegalEffectError(Exception):
@@ -142,7 +155,10 @@ class Effect:
         )
 
     def __hash__(self) -> int:
-        return hash([(k, v) for k, v in self.__dict__.items()])
+        # This is messy because __slots__ means that __dict__ is not available
+        return hash(
+            tuple((attr, self.__getattribute__(attr)) for attr in self.__slots__)
+        )
 
     @property
     def affected(self) -> Optional["Stat"]:
@@ -152,8 +168,14 @@ class Effect:
     def mod(self) -> Optional[Fraction]:
         return self._mod
 
+    @property
+    def status(self) -> Optional["Status"]:
+        return self._status
+
 
 class Status(Enum):
+    """Enumeration of all named Statuses which can apply to an Elemental."""
+
     Burn = 1
     Paralysis = 2
     Poison = 3
@@ -166,17 +188,13 @@ class Status(Enum):
 
 
 class Stat(Enum):
-    """"""
+    """Enumeration of all stats of an elemental."""
 
     Health = auto()
     Mana = auto()
     Attack = auto()
     Defense = auto()
     Speed = auto()
-
-
-# These aren't enum values because that would be a circular definition
-# TODO: fix this?
 
 
 BURN = Effect((Stat.Attack, Fraction(-2, 10)), Status.Burn, False, False)

@@ -1,7 +1,7 @@
-from collections import Mapping
-from typing import Dict, Set
+from typing import Dict, Set, Mapping
 
-from enums import ElementalType, Matchup
+from .enums import Matchup
+from .simple_elemental import ElementalType
 
 
 class UncoveredElementalError(Exception):
@@ -22,7 +22,9 @@ class MatchupTable:
 
     __slots__ = ["_matchups"]
 
-    def __init__(self, matchup_to_types: Mapping[Matchup, Set[ElementalType]]) -> None:
+    def __init__(
+        self, matchup_to_types: Mapping[Matchup, Set["ElementalType"]]
+    ) -> None:
         """
         Construct a new matchup table from `matchup_to_types`.
 

@@ -1,7 +1,44 @@
 from enum import Enum
 from fractions import Fraction
 
-from elemental_data import ElementalData
+
+class ElementalData:
+    """An immutable type representing the base stats of an elemental."""
+
+    def __init__(
+        self,
+        health: int,
+        mana: int,
+        attack: Fraction,
+        defense: Fraction,
+        speed: Fraction,
+    ) -> None:
+        """Construct a new ElementalData with the provided data."""
+        self._hp = health
+        self._mp = mana
+        self._atk = attack
+        self._def = defense
+        self._spd = speed
+
+    @property
+    def health(self) -> int:
+        return self._hp
+
+    @property
+    def mana(self) -> int:
+        return self._mp
+
+    @property
+    def attack(self) -> Fraction:
+        return self._atk
+
+    @property
+    def defense(self) -> Fraction:
+        return self._def
+
+    @property
+    def speed(self) -> Fraction:
+        return self._spd
 
 
 class ElementalType(Enum):
@@ -115,14 +152,3 @@ class ElementalType(Enum):
         defense=Fraction(11, 10),
         speed=Fraction(6, 10),
     )
-
-
-class Matchup(Enum):
-    """
-    Represents the advantage, disadvantage, or lack thereof, conferred by one elemental
-    attacking another.
-    """
-
-    Advantage = 1
-    Neutral = 2
-    Disadvantage = 3
