@@ -244,3 +244,36 @@ class Ability(Enum):
     Tsunami = AbilityData(
         damage=200, effects=(), mana=200, barrier=0, targets=Targets.All, level=30
     )
+    Pebble = AbilityData(
+        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
+    )
+    RockThrow = AbilityData(
+        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single, level=3
+    )
+    Rumble = AbilityData(
+        damage=20, effects=(), mana=40, barrier=0, targets=Targets.All, level=6
+    )
+    RockWall = AbilityData(
+        damage=0, effects=(), mana=50, barrier=80, targets=Targets.Single, level=9
+    )
+    BoulderSmash = AbilityData(
+        damage=80, effects=(), mana=60, barrier=0, targets=Targets.Single, level=12
+    )
+    StoneEdge = AbilityData(
+        damage=100, effects=(DAZE,), mana=80, barrier=0, targets=Targets.Single, level=15
+    )
+    Cliffside = AbilityData(
+        damage=0, effects=(), mana=90, barrier=150, targets=Targets.Single, level=18
+    )
+    Tremor = AbilityData(
+        damage=80, effects=(), mana=100, barrier=0, targets=Targets.All, level=21
+    )
+    PrecipiceStrike = AbilityData(
+        damage=150, effects=(), mana=120, barrier=0, targets=Targets.Single, level=24
+    )
+    Earthquake = AbilityData(
+        damage=100, effects=(), mana=150, barrier=0, targets=Targets.All, level=27
+    )
+    MountainRange = AbilityData(
+        damage=0, effects=(), mana=200, barrier=300, targets=Targets.All, level=30
+    )
