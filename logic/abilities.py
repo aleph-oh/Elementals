@@ -302,7 +302,7 @@ class Ability(Enum):
         damage=80, effects=(DAZE,), mana=100, barrier=0, targets=Targets.All, level=21
     )
     TailwindThrash = AbilityData(
-        damage=150, effects=(TAILWIND,), mana=120, barrier=0, targets=Targets.Single, level=24
+        damage=150, effects=(TAILWIND,), mana=120, barrier=0, targets=Targets.All, level=24
     )
     AirCannon = AbilityData(
         damage=250, effects=(), mana=150, barrier=0, targets=Targets.Single, level=27
