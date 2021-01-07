@@ -277,3 +277,36 @@ class Ability(Enum):
     MountainRange = AbilityData(
         damage=0, effects=(), mana=200, barrier=300, targets=Targets.All, level=30
     )
+    Breeze = AbilityData(
+        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
+    )
+    Gust = AbilityData(
+        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single, level=3
+    )
+    ZephyrSwirl = AbilityData(
+        damage=0, effects=(DAZE,), mana=30, barrier=0, targets=Targets.Single, level=6
+    )
+    Derecho = AbilityData(
+        damage=0, effects=(), mana=50, barrier=50, targets=Targets.Single, level=9
+    )
+    AirSwipe = AbilityData(
+        damage=80, effects=(), mana=60, barrier=0, targets=Targets.Single, level=12
+    )
+    Tailwind = AbilityData(
+        damage=0, effects=(TAILWIND,), mana=70, barrier=0, targets=Targets.All, level=15
+    )
+    GaleStrike = AbilityData(
+        damage=150, effects=(), mana=80, barrier=0, targets=Targets.Single, level=18
+    )
+    Whirlwind = AbilityData(
+        damage=80, effects=(DAZE,), mana=100, barrier=0, targets=Targets.All, level=21
+    )
+    TailwindThrash = AbilityData(
+        damage=150, effects=(TAILWIND,), mana=120, barrier=0, targets=Targets.Single, level=24
+    )
+    AirCannon = AbilityData(
+        damage=250, effects=(), mana=150, barrier=0, targets=Targets.Single, level=27
+    )
+    Tornado = AbilityData(
+        damage=200, effects=(), mana=200, barrier=0, targets=Targets.All, level=30
+    )
