@@ -1,19 +1,21 @@
-from typing import Tuple
+from typing import TYPE_CHECKING, Tuple
 
-from abilities import Targets
-from effects import Effect
+from enums import Targets
+
+if TYPE_CHECKING:
+    from logic.effects import Effect
 
 
-class _Barrier:
+class Barrier:
     """A type representing a mutable barrier."""
 
     __slots__ = ["_health", "_targets", "_effects"]
 
     def __init__(
-        self, init_health: int, targets: Targets, effects_on_hit: Tuple[Effect, ...]
+        self, init_health: int, targets: Targets, effects_on_hit: Tuple["Effect", ...]
     ) -> None:
         """
-        Construct a new _Barrier with `init_health` and protecting `targets` targets.
+        Construct a new Barrier with `init_health` and protecting `targets` targets.
 
         :param init_health: the initial barrier health
         :param targets: the amount of targets this barrier protects
@@ -44,20 +46,20 @@ class _Barrier:
         return self._targets
 
     @property
-    def effects_on_hit(self) -> Tuple[Effect, ...]:
+    def effects_on_hit(self) -> Tuple["Effect", ...]:
         """
         :return: the effects an elemental would receive upon hitting this barrier
         """
         return self._effects
 
-    def copy(self) -> "_Barrier":
-        return _Barrier(self._health, self._targets, self._effects)
+    def copy(self) -> "Barrier":
+        return Barrier(self._health, self._targets, self._effects)
 
 
-class AllBarrier(_Barrier):
+class AllBarrier(Barrier):
     """A type representing a mutable barrier protecting all elementals on one side."""
 
-    def __init__(self, init_health: int, effects_on_hit: Tuple[Effect, ...]) -> None:
+    def __init__(self, init_health: int, effects_on_hit: Tuple["Effect", ...]) -> None:
         """
         Construct a new AllBarrier with `init_health`.
 
@@ -76,10 +78,10 @@ class AllBarrier(_Barrier):
         return AllBarrier(0, ())
 
 
-class SingleBarrier(_Barrier):
+class SingleBarrier(Barrier):
     """A type representing a mutable barrier protecting a single elemental."""
 
-    def __init__(self, init_health: int, effects_on_hit: Tuple[Effect, ...]) -> None:
+    def __init__(self, init_health: int, effects_on_hit: Tuple["Effect", ...]) -> None:
         """
         Construct a new SingleBarrier with `init_health`.
 

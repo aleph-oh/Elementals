@@ -1,15 +1,14 @@
-from collections import Iterable
 from fractions import Fraction
-from typing import Optional, Set, TYPE_CHECKING
+from typing import Set, TYPE_CHECKING, Iterable
 
-import enums
-from barriers import AllBarrier, _Barrier, SingleBarrier
-from effects import Effect, Effects
-from elemental_data import ElementalData
-from type_matchups import MATCHUPS
+from .barriers import AllBarrier, SingleBarrier
+from .effects import Effect, Effects
+from .elemental_data import ElementalData, ElementalType
+from .enums import Matchup
+from .type_matchups import MATCHUPS
 
 if TYPE_CHECKING:
-    from abilities import AbilityData
+    from .abilities import AbilityData
 
 
 class SimpleElemental:
@@ -28,7 +27,7 @@ class SimpleElemental:
         "_abilities",
     ]
 
-    def __init__(self, kind: enums.ElementalType, stats: ElementalData) -> None:
+    def __init__(self, kind: ElementalType, stats: ElementalData) -> None:
         """
         Construct a new elemental of type `kind` with `stats`.
 
@@ -45,7 +44,7 @@ class SimpleElemental:
         self._abilities = set()
 
     @property
-    def kind(self) -> enums.ElementalType:
+    def kind(self) -> ElementalType:
         return self._kind
 
     @property
@@ -72,7 +71,7 @@ class SimpleElemental:
     def abilities(self) -> Set["AbilityData"]:
         return self._abilities.copy()  # avoid aliasing
 
-    def matchup(self, other: "SimpleElemental") -> enums.Matchup:
+    def matchup(self, other: "SimpleElemental") -> Matchup:
         """
         Return the value of the matchup enum corresponding to if self has advantage against
         other.

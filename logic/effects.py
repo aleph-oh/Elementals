@@ -1,31 +1,27 @@
-from collections import Iterable
 from enum import Enum, auto
 from fractions import Fraction
-from typing import Any, Optional, Set, Tuple
+from typing import Any, Optional, Set, Tuple, Iterable, TYPE_CHECKING
 
-from abilities import AbilityData
+if TYPE_CHECKING:
+    from .abilities import AbilityData
 
 
 class Effects:
     """A mutable type representing all new_effects presently applied to an elemental."""
 
-    # TODO: make new_effects non permanent so they track remaining turns, or something similar
-
     __slots__ = ["_end_this_round", "_end_next_round"]
 
     def __init__(self, this_round: Set["Effect"], next_round: Set["Effect"]) -> None:
         """
-        Construct a new Effects object with the new_effects in `new_effects`
+        Construct a new Effects object with the effects in `this_round` and `next_round`.
 
-        :param new_effects: the new_effects presently applied to this elemental
+        :param this_round: effects which will end this round
+        :param next_round: effects which will end next round
         """
         self._end_this_round = this_round.copy()
         self._end_next_round = next_round.copy()
 
-    def reset(self) -> None:
-        """Clear all modifiers, emptying this type."""
-
-    def can_use(self, ability: AbilityData) -> bool:
+    def can_use(self, ability: "AbilityData") -> bool:
         """
         Check if `ability` can be used according to constraints from this Effects object.
 
@@ -70,15 +66,7 @@ class Effects:
             if e.affected == target_stat
         )
 
-    def add(self, effect: "Effect") -> None:
-        """
-        Add an effect to this Effects object.
-
-        :param effect: the effect to add
-        """
-        self._end_next_round.add(effect)
-
-    def extend(self, new_effects: Iterable["Effect"]) -> None:
+    def extend(self, new_effects: 'Iterable["Effect"]') -> None:
         """
         Extend the effects in this object with `new_effects`
 
@@ -87,7 +75,7 @@ class Effects:
         for e in new_effects:
             self._end_next_round.add(e)
 
-    def __iter__(self) -> Iterable["Effect"]:
+    def __iter__(self) -> 'Iterable["Effect"]':
         yield from self._end_this_round | self._end_next_round
 
     def end_round(self) -> None:
@@ -167,7 +155,10 @@ class Effect:
         )
 
     def __hash__(self) -> int:
-        return hash([(k, v) for k, v in self.__dict__.items()])
+        # This is messy because __slots__ means that __dict__ is not available
+        return hash(
+            tuple((attr, self.__getattribute__(attr)) for attr in self.__slots__)
+        )
 
     @property
     def affected(self) -> Optional["Stat"]:
@@ -177,8 +168,14 @@ class Effect:
     def mod(self) -> Optional[Fraction]:
         return self._mod
 
+    @property
+    def status(self) -> Optional["Status"]:
+        return self._status
+
 
 class Status(Enum):
+    """Enumeration of all named Statuses which can apply to an Elemental."""
+
     Burn = 1
     Paralysis = 2
     Poison = 3
@@ -191,17 +188,13 @@ class Status(Enum):
 
 
 class Stat(Enum):
-    """"""
+    """Enumeration of all stats of an elemental."""
 
     Health = auto()
     Mana = auto()
     Attack = auto()
     Defense = auto()
     Speed = auto()
-
-
-# These aren't enum values because that would be a circular definition
-# TODO: fix this?
 
 
 BURN = Effect((Stat.Attack, Fraction(-2, 10)), Status.Burn, False, False)

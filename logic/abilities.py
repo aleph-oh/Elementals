@@ -3,9 +3,10 @@ from enum import Enum
 from fractions import Fraction
 from typing import List, TYPE_CHECKING, Tuple, Union
 
-from barriers import AllBarrier, SingleBarrier, _Barrier
+from barriers import AllBarrier, Barrier, SingleBarrier
 from effects import BURN, Effect
-from enums import ElementalType
+from enums import Targets
+from elemental_data import ElementalType
 
 if TYPE_CHECKING:
     from simple_elemental import SimpleElemental
@@ -52,7 +53,7 @@ class AbilityData:
         damage: int,
         effects: Tuple[Effect, ...],
         mana: int,
-        barrier: Union[int, _Barrier],
+        barrier: Union[int, "Barrier"],
         targets: "Targets",
         level: int,
         ignore_barrier_when_thunder: bool = False,
@@ -73,7 +74,7 @@ class AbilityData:
         self._dmg = damage
         self._effects = effects
         self._mp = mana
-        self._barrier: _Barrier
+        self._barrier: Barrier
         if isinstance(barrier, int):
             barrier_health = barrier
             if targets is Targets.All:
@@ -172,13 +173,6 @@ class AbilityData:
         :return: true if this ability does not deal damage, false otherwise
         """
         return self._dmg <= 0
-
-
-class Targets(Enum):
-    """An enumeration of how many targets an ability affects"""
-
-    Single = 1
-    All = 2
 
 
 class Ability(Enum):
