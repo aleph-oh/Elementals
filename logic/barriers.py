@@ -20,10 +20,11 @@ class Barrier:
         :param init_health: the initial barrier health
         :param targets: the amount of targets this barrier protects
         :param effects_on_hit: the effects an elemental would receive upon hitting this barrier
+                                ; redundant entries ignored
         """
         self._health = init_health
         self._targets = targets
-        self._effects = effects_on_hit
+        self._effects = tuple(set(effects_on_hit))
 
     @property
     def health(self) -> int:

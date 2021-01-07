@@ -32,7 +32,7 @@ class SimpleElemental:
         Construct a new elemental of type `kind` with `stats`.
 
         :param kind: the type of the elemental to construct
-        :param stats: the stats of the elemental to construct
+        :param stats: the initial stats of the elemental to construct
         """
         self._kind = kind
         self._hp = stats.health
@@ -57,15 +57,15 @@ class SimpleElemental:
 
     @property
     def attack(self) -> Fraction:
-        return self._base_stats.attack
+        return self._base_stats.attack * self._effects.attack_mod()
 
     @property
     def defense(self) -> Fraction:
-        return self._base_stats.defense
+        return self._base_stats.defense * self._effects.defense_mod()
 
     @property
     def speed(self) -> Fraction:
-        return self._base_stats.speed
+        return self._base_stats.speed * self._effects.speed_mod()
 
     @property
     def abilities(self) -> Set["AbilityData"]:
