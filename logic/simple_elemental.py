@@ -1,5 +1,5 @@
 from fractions import Fraction
-from typing import Set, TYPE_CHECKING, Iterable
+from typing import Iterable, Set, TYPE_CHECKING
 
 from .barriers import AllBarrier, SingleBarrier
 from .effects import Effect, Effects

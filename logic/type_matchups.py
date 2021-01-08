@@ -1,4 +1,4 @@
-from typing import Dict, Set, Mapping
+from typing import Dict, Mapping, Set
 
 from .enums import Matchup
 from .simple_elemental import ElementalType

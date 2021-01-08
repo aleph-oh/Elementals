@@ -1,7 +1,9 @@
 import unittest
 from fractions import Fraction
 
-from logic.effects import Effect, Effects, Stat, Status, IllegalEffectError
+from abilities import AbilityData
+from enums import Targets
+from logic.effects import Effect, Effects, IllegalEffectError, Stat, Status
 
 
 class TestEffect(unittest.TestCase):
@@ -103,6 +105,9 @@ class TestEffects(unittest.TestCase):
             0
             > 0
     extend:
+        Partition on number of effects in the object initially:
+            0
+            > 0
         Partition on size of new_effects:
             0
             > 0
@@ -120,16 +125,93 @@ class TestEffects(unittest.TestCase):
     """
 
     def test_init_empty(self):
-        pass
+        empty = Effects(set(), set())
+        self.check_zero_mod(empty)
+        ability = AbilityData(
+            damage=0, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
+        )
+        self.assertTrue(empty.can_use(ability))
+        effects = list(empty)
+        empty.end_round()
+        after_end_effects = list(empty)
+        self.assertEqual([], effects)
+        self.assertEqual(effects, after_end_effects)
+        empty.extend([])
+        self.assertTrue(empty.can_use(ability), "Made no changes")
+        empty.extend([Effect(None, None, False, True)])
+        self.assertFalse(
+            empty.can_use(ability),
+            "Added effect prohibiting using support, " "but can still use support move",
+        )
 
     def test_init_singleton(self):
-        pass
+        no_attack = Effect(None, None, True, False)
+        singleton = Effects(set(), {no_attack})
+        self.check_zero_mod(singleton)
+        attack = AbilityData(
+            damage=50, effects=(), mana=10, barrier=0, targets=Targets.Single, level=3
+        )
+        support = AbilityData(
+            damage=0, effects=(), mana=10, barrier=80, targets=Targets.Single, level=1
+        )
+        self.assertFalse(singleton.can_use(attack))
+        self.assertTrue(singleton.can_use(support))
+        self.assertEqual([no_attack], list(singleton))
+        singleton.end_round()
+        self.assertFalse(singleton.can_use(attack))
+        self.assertTrue(singleton.can_use(support))
+        self.assertEqual([no_attack], list(singleton))
+        singleton.end_round()
+        self.assertEqual([], list(singleton))
+        self.assertTrue(singleton.can_use(attack))
+        self.assertTrue(singleton.can_use(support))
 
     def test_init_many(self):
-        pass
+        buff_attack = Effect((Stat.Attack, Fraction(1, 2)), None, False, False)
+        nerf_speed = Effect((Stat.Speed, Fraction(-1, 10)), None, False, False)
+        attack = AbilityData(
+            damage=50, effects=(), mana=10, barrier=0, targets=Targets.Single, level=3
+        )
+        support = AbilityData(
+            damage=0, effects=(), mana=10, barrier=80, targets=Targets.Single, level=1
+        )
+        many = Effects({buff_attack}, {nerf_speed})
+        self.assertTrue(many.can_use(attack))
+        self.assertTrue(many.can_use(support))
+        self.assertEqual(Fraction(1, 2), many.attack_mod)
+        self.assertEqual(0, many.defense_mod)
+        self.assertEqual(Fraction(-1, 10), many.speed_mod)
+        self.assertEqual(set(many), {buff_attack, nerf_speed})
+        no_attack = Effect(None, None, True, False)
+        many.extend([no_attack, buff_attack])
+        self.assertFalse(many.can_use(attack))
+        self.assertTrue(many.can_use(support))
+        self.assertEqual(Fraction(1, 1), many.attack_mod)
+        self.assertEqual(0, many.defense_mod)
+        self.assertEqual(Fraction(-1, 10), many.speed_mod)
+        self.assertEqual([buff_attack, nerf_speed, no_attack, buff_attack], list(many))
+        many.end_round()
+        self.assertEqual([nerf_speed, no_attack, buff_attack], list(many))
+        self.assertFalse(many.can_use(attack))
+        self.assertTrue(many.can_use(support))
+        self.assertEqual(Fraction(1, 2), many.attack_mod)
+        self.assertEqual(0, many.defense_mod)
+        self.assertEqual(Fraction(-1, 10), many.speed_mod)
+        many.extend([nerf_speed])
+        self.assertEqual(Fraction(1, 2), many.attack_mod)
+        self.assertEqual(0, many.defense_mod)
+        self.assertEqual(Fraction(-2, 10), many.speed_mod)
+        many.end_round()
+        self.assertEqual([nerf_speed], list(many))
+        self.assertTrue(many.can_use(attack))
+        self.assertTrue(many.can_use(support))
+        self.assertEqual(0, many.attack_mod)
+        self.assertEqual(0, many.defense_mod)
+        self.assertEqual(Fraction(-1, 10), many.speed_mod)
 
-    def test_zero_stat_mod(self):
-        pass
+    def check_zero_mod(self, effects):
+        for mod in (effects.attack_mod, effects.defense_mod, effects.speed_mod):
+            self.assertEqual(0, mod)
 
 
 if __name__ == "__main__":

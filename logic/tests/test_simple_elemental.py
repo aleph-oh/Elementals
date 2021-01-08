@@ -1,5 +1,4 @@
 import unittest
-from logic.simple_elemental import SimpleElemental
 
 
 class TestSimpleElemental(unittest.TestCase):

@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from fractions import Fraction
-from typing import Any, Optional, Set, Tuple, Iterable, TYPE_CHECKING
+from typing import Any, Iterable, Optional, TYPE_CHECKING, Tuple
 
 if TYPE_CHECKING:
     from .abilities import AbilityData
@@ -11,15 +11,17 @@ class Effects:
 
     __slots__ = ["_end_this_round", "_end_next_round"]
 
-    def __init__(self, this_round: Set["Effect"], next_round: Set["Effect"]) -> None:
+    def __init__(
+        self, this_round: Iterable["Effect"], next_round: Iterable["Effect"]
+    ) -> None:
         """
         Construct a new Effects object with the effects in `this_round` and `next_round`.
 
         :param this_round: effects which will end this round
         :param next_round: effects which will end next round
         """
-        self._end_this_round = this_round.copy()
-        self._end_next_round = next_round.copy()
+        self._end_this_round = list(this_round)
+        self._end_next_round = list(next_round)
 
     def can_use(self, ability: "AbilityData") -> bool:
         """
@@ -28,7 +30,7 @@ class Effects:
         :param ability: the ability to check if can be used
         :return: true if can be used, false otherwise
         """
-        effects = self._end_this_round | self._end_next_round
+        effects = self._end_this_round + self._end_next_round
         for e in effects:
             if (ability.is_attack and e.no_attack) or (
                 ability.is_support and e.no_support
@@ -36,18 +38,21 @@ class Effects:
                 return False
         return True
 
+    @property
     def attack_mod(self) -> Fraction:
         """
         :return: the attack modifier resulting from this Effects object
         """
         return self._mod_for(Stat.Attack)
 
+    @property
     def defense_mod(self) -> Fraction:
         """
         :return: the defense modifier resulting from this Effects object
         """
         return self._mod_for(Stat.Defense)
 
+    @property
     def speed_mod(self) -> Fraction:
         """
         :return: the speed modifier resulting from this Effects object
@@ -62,7 +67,7 @@ class Effects:
         """
         return sum(
             e.mod
-            for e in (self._end_this_round | self._end_next_round)
+            for e in (self._end_this_round + self._end_next_round)
             if e.affected == target_stat
         )
 
@@ -72,16 +77,15 @@ class Effects:
 
         :param new_effects: effects to add to this Effects object
         """
-        for e in new_effects:
-            self._end_next_round.add(e)
+        self._end_next_round.extend(new_effects)
 
     def __iter__(self) -> 'Iterable["Effect"]':
-        yield from self._end_this_round | self._end_next_round
+        yield from self._end_this_round + self._end_next_round
 
     def end_round(self) -> None:
         """Mutates this Effects objects by ending the present round."""
         self._end_this_round = self._end_next_round.copy()
-        self._end_next_round = set()
+        self._end_next_round = []
 
 
 class IllegalEffectError(Exception):
@@ -156,9 +160,7 @@ class Effect:
 
     def __hash__(self) -> int:
         # This is messy because __slots__ means that __dict__ is not available
-        return hash(
-            tuple((attr, self.__getattribute__(attr)) for attr in self.__slots__)
-        )
+        return hash(tuple(getattr(self, attr) for attr in self.__slots__))
 
     @property
     def affected(self) -> Optional["Stat"]:
