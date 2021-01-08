@@ -6,6 +6,7 @@ from typing import List, TYPE_CHECKING, Tuple, Union
 from barriers import AllBarrier, Barrier, SingleBarrier
 from elemental_data import Element
 from enums import Targets
+from logic.statuses import Status
 
 if TYPE_CHECKING:
     from elemental import SimpleElemental
@@ -48,14 +49,14 @@ class AbilityData:
     ]
 
     def __init__(
-        self,
-        damage: int,
-        effects: Tuple[_StatusData, ...],
-        mana: int,
-        barrier: Union[int, "Barrier"],
-        targets: "Targets",
-        level: int,
-        ignore_barrier_when_thunder: bool = False,
+            self,
+            damage: int,
+            effects: Tuple[_StatusData, ...],
+            mana: int,
+            barrier: Union[int, "Barrier"],
+            targets: "Targets",
+            level: int,
+            ignore_barrier_when_thunder: bool = False,
     ) -> None:
         """
         Construct a new ability.
@@ -89,7 +90,7 @@ class AbilityData:
         self._ignore_when_thunder = ignore_barrier_when_thunder
 
     def apply(
-        self, source: "SimpleElemental", targets: List["SimpleElemental"]
+            self, source: "SimpleElemental", targets: List["SimpleElemental"]
     ) -> None:
         """
         Apply an ability and its new_effects to targets, originating from (and deducting mp
@@ -177,160 +178,363 @@ class AbilityData:
 class Ability(Enum):
     """An enumeration of all available abilities"""
 
-    Ember = AbilityData(
-        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
-    )
-    Blaze = AbilityData(
-        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single, level=3
-    )
-    Fireball = AbilityData(
-        damage=50, effects=(), mana=30, barrier=0, targets=Targets.Single, level=6
-    )
-    Flamethrower = AbilityData(
-        damage=60, effects=(BURN,), mana=50, barrier=0, targets=Targets.Single, level=9
-    )
-    Firewall = AbilityData(
-        damage=0, effects=(), mana=70, barrier=50, targets=Targets.Single, level=12
-    )
-    FlareBurst = AbilityData(
+    Ember = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    Blaze = [AbilityData(
+        damage=25,
+        effects=(),
+        mana=20,
+        barrier=0,
+        targets=Targets.Single,
+        level=3
+    )]
+    Fireball = [AbilityData(
+        damage=50,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    Flamethrower = [AbilityData(
+        damage=60,
+        effects=(Status.Burn,),
+        mana=50,
+        barrier=0,
+        targets=Targets.Single,
+        level=9
+    )]
+    Firewall = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=70,
+        barrier=50,
+        targets=Targets.Single,
+        level=12
+    )]
+    FlareBurst = [AbilityData(
         damage=100,
-        effects=(BURN,),
+        effects=(Status.Burn,),
         mana=80,
         barrier=0,
         targets=Targets.Single,
         level=15,
-    )
-    Wildfire = AbilityData(
-        damage=80, effects=(), mana=90, barrier=0, targets=Targets.All, level=18
-    )
-    Sunlight = AbilityData(
-        damage=-100, effects=(), mana=90, barrier=0, targets=Targets.Single, level=21
-    )
-    Meteorite = AbilityData(
-        damage=150, effects=(), mana=100, barrier=0, targets=Targets.Single, level=24
-    )
-    Inferno = AbilityData(
-        damage=250, effects=(), mana=150, barrier=0, targets=Targets.Single, level=27
-    )
-    MeteorRain = AbilityData(
-        damage=200, effects=(), mana=200, barrier=0, targets=Targets.All, level=30
-    )
-    Puddle = AbilityData(
-        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
-    )
-    Splash = AbilityData(
-        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single, level=3
-    )
-    Dampen = AbilityData(
+    )]
+    Wildfire = [AbilityData(
+        damage=80,
+        effects=(),
+        mana=90,
+        barrier=0,
+        targets=Targets.All,
+        level=18
+    )]
+    Sunlight = [AbilityData(
+        damage=-100,
+        effects=(),
+        mana=90,
+        barrier=0,
+        targets=Targets.Single,
+        level=21
+    )]
+    Meteorite = [AbilityData(
+        damage=150,
+        effects=(),
+        mana=100,
+        barrier=0,
+        targets=Targets.Single,
+        level=24
+    )]
+    Inferno = [AbilityData(
+        damage=250,
+        effects=(),
+        mana=150,
+        barrier=0,
+        targets=Targets.Single,
+        level=27
+    )]
+    MeteorRain = [AbilityData(
+        damage=200,
+        effects=(),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30
+    )]
+    Puddle = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    Splash = [AbilityData(
+        damage=25,
+        effects=(),
+        mana=20,
+        barrier=0,
+        targets=Targets.Single,
+        level=3
+    )]
+    Dampen = [AbilityData(
         damage=0,
-        effects=(PARALYSIS,),
+        effects=(Status.Paralysis,),
         mana=30,
         barrier=0,
         targets=Targets.Single,
         level=6,
-    )
-    Torrent = AbilityData(
-        damage=50, effects=(), mana=40, barrier=0, targets=Targets.Single, level=9
-    )
-    WaveCrash = AbilityData(
-        damage=70, effects=(), mana=50, barrier=0, targets=Targets.Single, level=12
-    )
-    AquaShield = AbilityData(
+    )]
+    Torrent = [AbilityData(
+        damage=50,
+        effects=(),
+        mana=40,
+        barrier=0,
+        targets=Targets.Single,
+        level=9
+    )]
+    WaveCrash = [AbilityData(
+        damage=70,
+        effects=(),
+        mana=50,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    AquaShield = [AbilityData(
         damage=0,
-        effects=(AQUA_SHIELD,),
+        effects=(Status.AquaShield,),
         mana=75,
         barrier=0,
         targets=Targets.All,
         level=15,
-    )
-    Waterfall = AbilityData(
-        damage=150, effects=(), mana=80, barrier=0, targets=Targets.Single, level=18
-    )
-    Reservoir = AbilityData(
-        damage=-100, effects=(), mana=90, barrier=0, targets=Targets.Single, level=21
-    )
-    WaterBubble = AbilityData(
-        damage=0, effects=(), mana=100, barrier=150, targets=Targets.Single, level=24
-    )
-    Whirlpool = AbilityData(
-        damage=100, effects=(), mana=150, barrier=0, targets=Targets.All, level=27
-    )
-    Tsunami = AbilityData(
-        damage=200, effects=(), mana=200, barrier=0, targets=Targets.All, level=30
-    )
-    Pebble = AbilityData(
-        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
-    )
-    RockThrow = AbilityData(
-        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single, level=3
-    )
-    Rumble = AbilityData(
-        damage=20, effects=(), mana=40, barrier=0, targets=Targets.All, level=6
-    )
-    RockWall = AbilityData(
-        damage=0, effects=(), mana=50, barrier=80, targets=Targets.Single, level=9
-    )
-    BoulderSmash = AbilityData(
-        damage=80, effects=(), mana=60, barrier=0, targets=Targets.Single, level=12
-    )
-    StoneEdge = AbilityData(
+    )]
+    Waterfall = [AbilityData(
+        damage=150,
+        effects=(),
+        mana=80,
+        barrier=0,
+        targets=Targets.Single,
+        level=18
+    )]
+    Reservoir = [AbilityData(
+        damage=-100,
+        effects=(),
+        mana=90,
+        barrier=0,
+        targets=Targets.Single,
+        level=21
+    )]
+    WaterBubble = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=100,
+        barrier=150,
+        targets=Targets.Single,
+        level=24
+    )]
+    Whirlpool = [AbilityData(
         damage=100,
-        effects=(DAZE,),
+        effects=(),
+        mana=150,
+        barrier=0,
+        targets=Targets.All,
+        level=27
+    )]
+    Tsunami = [AbilityData(
+        damage=200,
+        effects=(),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30
+    )]
+    Pebble = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    RockThrow = [AbilityData(
+        damage=25,
+        effects=(),
+        mana=20,
+        barrier=0,
+        targets=Targets.Single,
+        level=3
+    )]
+    Rumble = [AbilityData(
+        damage=20,
+        effects=(),
+        mana=40,
+        barrier=0,
+        targets=Targets.All,
+        level=6
+    )]
+    RockWall = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=50,
+        barrier=80,
+        targets=Targets.Single,
+        level=9
+    )]
+    BoulderSmash = [AbilityData(
+        damage=80,
+        effects=(),
+        mana=60,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    StoneEdge = [AbilityData(
+        damage=100,
+        effects=(Status.Daze,),
         mana=80,
         barrier=0,
         targets=Targets.Single,
         level=15,
-    )
-    Cliffside = AbilityData(
-        damage=0, effects=(), mana=90, barrier=150, targets=Targets.Single, level=18
-    )
-    Tremor = AbilityData(
-        damage=80, effects=(), mana=100, barrier=0, targets=Targets.All, level=21
-    )
-    PrecipiceStrike = AbilityData(
-        damage=150, effects=(), mana=120, barrier=0, targets=Targets.Single, level=24
-    )
-    Earthquake = AbilityData(
-        damage=100, effects=(), mana=150, barrier=0, targets=Targets.All, level=27
-    )
-    MountainRange = AbilityData(
-        damage=0, effects=(), mana=200, barrier=300, targets=Targets.All, level=30
-    )
-    Breeze = AbilityData(
-        damage=10, effects=(), mana=10, barrier=0, targets=Targets.Single, level=1
-    )
-    Gust = AbilityData(
-        damage=25, effects=(), mana=20, barrier=0, targets=Targets.Single, level=3
-    )
-    ZephyrSwirl = AbilityData(
-        damage=0, effects=(DAZE,), mana=30, barrier=0, targets=Targets.Single, level=6
-    )
-    Derecho = AbilityData(
-        damage=0, effects=(), mana=50, barrier=50, targets=Targets.Single, level=9
-    )
-    AirSwipe = AbilityData(
-        damage=80, effects=(), mana=60, barrier=0, targets=Targets.Single, level=12
-    )
-    Tailwind = AbilityData(
-        damage=0, effects=(TAILWIND,), mana=70, barrier=0, targets=Targets.All, level=15
-    )
-    GaleStrike = AbilityData(
-        damage=150, effects=(), mana=80, barrier=0, targets=Targets.Single, level=18
-    )
-    Whirlwind = AbilityData(
-        damage=80, effects=(DAZE,), mana=100, barrier=0, targets=Targets.All, level=21
-    )
-    TailwindThrash = AbilityData(
+    )]
+    Cliffside = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=90,
+        barrier=150,
+        targets=Targets.Single,
+        level=18
+    )]
+    Tremor = [AbilityData(
+        damage=80,
+        effects=(),
+        mana=100,
+        barrier=0,
+        targets=Targets.All,
+        level=21
+    )]
+    PrecipiceStrike = [AbilityData(
         damage=150,
-        effects=(TAILWIND,),
+        effects=(),
+        mana=120,
+        barrier=0,
+        targets=Targets.Single,
+        level=24
+    )]
+    Earthquake = [AbilityData(
+        damage=100,
+        effects=(),
+        mana=150,
+        barrier=0,
+        targets=Targets.All,
+        level=27
+    )]
+    MountainRange = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=200,
+        barrier=300,
+        targets=Targets.All,
+        level=30
+    )]
+    Breeze = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    Gust = [AbilityData(
+        damage=25,
+        effects=(),
+        mana=20,
+        barrier=0,
+        targets=Targets.Single,
+        level=3
+    )]
+    ZephyrSwirl = [AbilityData(
+        damage=0,
+        effects=(Status.Daze,),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    Derecho = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=50,
+        barrier=50,
+        targets=Targets.Single,
+        level=9
+    )]
+    AirSwipe = [AbilityData(
+        damage=80,
+        effects=(),
+        mana=60,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    Tailwind = [AbilityData(
+        damage=0,
+        effects=(Status.Tailwind,),
+        mana=70,
+        barrier=0,
+        targets=Targets.All,
+        level=15
+    )]
+    GaleStrike = [AbilityData(
+        damage=150,
+        effects=(),
+        mana=80,
+        barrier=0,
+        targets=Targets.Single,
+        level=18
+    )]
+    Whirlwind = [AbilityData(
+        damage=80,
+        effects=(Status.Daze,),
+        mana=100,
+        barrier=0,
+        targets=Targets.All,
+        level=21
+    )]
+    TailwindThrash = [AbilityData(
+        damage=0,
+        effects=(Status.Tailwind,),
         mana=120,
         barrier=0,
         targets=Targets.All,
         level=24,
-    )
-    AirCannon = AbilityData(
-        damage=250, effects=(), mana=150, barrier=0, targets=Targets.Single, level=27
-    )
-    Tornado = AbilityData(
-        damage=200, effects=(), mana=200, barrier=0, targets=Targets.All, level=30
-    )
+    ),
+        AbilityData(
+            damage=150,
+            effects=(),
+            mana=0,
+            barrier=0,
+            targets=Targets.Single,
+            level=24
+        )]
+    AirCannon = [AbilityData(
+        damage=250,
+        effects=(),
+        mana=150,
+        barrier=0,
+        targets=Targets.Single,
+        level=27
+    )]
+    Tornado = [AbilityData(
+        damage=200,
+        effects=(),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30
+    )]
