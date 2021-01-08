@@ -4,12 +4,11 @@ from fractions import Fraction
 from typing import List, TYPE_CHECKING, Tuple, Union
 
 from barriers import AllBarrier, Barrier, SingleBarrier
-from effects import AQUA_SHIELD, BURN, DAZE, Effect, PARALYSIS, TAILWIND
-from elemental_data import ElementalType
+from elemental_data import Element
 from enums import Targets
 
 if TYPE_CHECKING:
-    from simple_elemental import SimpleElemental
+    from elemental import SimpleElemental
 
 
 class IllegalAbilityError(Exception):
@@ -51,7 +50,7 @@ class AbilityData:
     def __init__(
         self,
         damage: int,
-        effects: Tuple[Effect, ...],
+        effects: Tuple[_StatusData, ...],
         mana: int,
         barrier: Union[int, "Barrier"],
         targets: "Targets",
@@ -112,7 +111,7 @@ class AbilityData:
             raise NoTargetsError("No targets found")
         if not source.can_use(self):
             raise IllegalAbilityError(
-                f"This {source.kind.name} cannot use this ability"
+                f"This {source.element.name} cannot use this ability"
             )
         if self._targets == Targets.Single and len(targets) > 1:
             raise TargetCountMismatchError(
@@ -120,7 +119,7 @@ class AbilityData:
                 f"elementals are being targeted"
             )
         if self.is_attack:
-            if source.kind == ElementalType.Thunder and self._ignore_when_thunder:
+            if source.element == Element.Thunder and self._ignore_when_thunder:
                 to_each = [self._dmg for _ in targets]
             else:
                 damage_to_all = self._dmg * len(targets)

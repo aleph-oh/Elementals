@@ -1,8 +1,8 @@
 import unittest
 
 from logic.barriers import AllBarrier, SingleBarrier
-from logic.effects import BURN, TAILWIND
 from logic.enums import Targets
+from logic.statuses import BURN, TAILWIND
 
 
 class TestAllBarrier(unittest.TestCase):

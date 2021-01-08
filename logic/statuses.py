@@ -6,16 +6,16 @@ if TYPE_CHECKING:
     from .abilities import AbilityData
 
 
-class Effects:
+class Statuses:
     """A mutable type representing all new_effects presently applied to an elemental."""
 
     __slots__ = ["_end_this_round", "_end_next_round"]
 
     def __init__(
-        self, this_round: Iterable["Effect"], next_round: Iterable["Effect"]
+        self, this_round: Iterable["Status"], next_round: Iterable["Status"]
     ) -> None:
         """
-        Construct a new Effects object with the effects in `this_round` and `next_round`.
+        Construct a new Statuses object with the effects in `this_round` and `next_round`.
 
         :param this_round: effects which will end this round
         :param next_round: effects which will end next round
@@ -25,15 +25,15 @@ class Effects:
 
     def can_use(self, ability: "AbilityData") -> bool:
         """
-        Check if `ability` can be used according to constraints from this Effects object.
+        Check if `ability` can be used according to constraints from this Statuses object.
 
         :param ability: the ability to check if can be used
         :return: true if can be used, false otherwise
         """
-        effects = self._end_this_round + self._end_next_round
-        for e in effects:
-            if (ability.is_attack and e.no_attack) or (
-                ability.is_support and e.no_support
+        statuses = self._end_this_round + self._end_next_round
+        for s in statuses:
+            if (ability.is_attack and s.no_attack) or (
+                ability.is_support and s.no_support
             ):
                 return False
         return True
@@ -41,49 +41,49 @@ class Effects:
     @property
     def attack_mod(self) -> Fraction:
         """
-        :return: the attack modifier resulting from this Effects object
+        :return: the attack modifier resulting from this Statuses object
         """
         return self._mod_for(Stat.Attack)
 
     @property
     def defense_mod(self) -> Fraction:
         """
-        :return: the defense modifier resulting from this Effects object
+        :return: the defense modifier resulting from this Statuses object
         """
         return self._mod_for(Stat.Defense)
 
     @property
     def speed_mod(self) -> Fraction:
         """
-        :return: the speed modifier resulting from this Effects object
+        :return: the speed modifier resulting from this Statuses object
         """
         return self._mod_for(Stat.Speed)
 
     def _mod_for(self, target_stat: "Stat") -> Fraction:
         """
-        :param target_stat: the stat to find the modifier of, resulting from this Effects
+        :param target_stat: the stat to find the modifier of, resulting from this Statuses
                             object.
-        :return: the *target_stat* modifier resulting from this Effects object
+        :return: the *target_stat* modifier resulting from this Statuses object
         """
         return sum(
-            e.mod
-            for e in (self._end_this_round + self._end_next_round)
-            if e.affected == target_stat
+            s.mod
+            for s in (self._end_this_round + self._end_next_round)
+            if s.affected == target_stat
         )
 
-    def extend(self, new_effects: 'Iterable["Effect"]') -> None:
+    def extend(self, new_effects: 'Iterable["Status"]') -> None:
         """
         Extend the effects in this object with `new_effects`
 
-        :param new_effects: effects to add to this Effects object
+        :param new_effects: effects to add to this Statuses object
         """
         self._end_next_round.extend(new_effects)
 
-    def __iter__(self) -> 'Iterable["Effect"]':
+    def __iter__(self) -> 'Iterable["Status"]':
         yield from self._end_this_round + self._end_next_round
 
     def end_round(self) -> None:
-        """Mutates this Effects objects by ending the present round."""
+        """Mutates this Statuses objects by ending the present round."""
         self._end_this_round = self._end_next_round.copy()
         self._end_next_round = []
 
@@ -94,15 +94,14 @@ class IllegalEffectError(Exception):
     pass
 
 
-class Effect:
+class _StatusData:
     """An immutable type representing an effect applied to an elemental."""
 
-    __slots__ = ["_affected", "_mod", "_status", "_no_attack", "_no_support"]
+    __slots__ = ["_affected", "_mod", "_no_attack", "_no_support"]
 
     def __init__(
         self,
         affected_stat: Optional[Tuple["Stat", "Fraction"]],
-        status: Optional["Status"],
         no_attack: bool,
         no_support: bool,
     ) -> None:
@@ -122,7 +121,6 @@ class Effect:
         :raises IllegalEffectError: if (affected_stat is not None ^ no_attack is True
                                     ^ no_support) is False
         """
-        self._status = status
         affecting = 0
         self._affected: Optional[Stat]
         self._mod: Optional[Fraction]
@@ -151,7 +149,7 @@ class Effect:
 
     def __eq__(self, other: Any) -> bool:
         return (
-            isinstance(other, Effect)
+            isinstance(other, _StatusData)
             and self._affected == other._affected
             and self._mod == other._mod
             and self._no_support == other._no_support
@@ -170,24 +168,6 @@ class Effect:
     def mod(self) -> Optional[Fraction]:
         return self._mod
 
-    @property
-    def status(self) -> Optional["Status"]:
-        return self._status
-
-
-class Status(Enum):
-    """Enumeration of all named Statuses which can apply to an Elemental."""
-
-    Burn = 1
-    Paralysis = 2
-    Poison = 3
-    Frost = 4
-    Daze = 5
-    Rage = 6
-    Tailwind = 7
-    ElectronFlow = 8
-    AquaShield = 9
-
 
 class Stat(Enum):
     """Enumeration of all stats of an elemental."""
@@ -199,14 +179,31 @@ class Stat(Enum):
     Speed = auto()
 
 
-BURN = Effect((Stat.Attack, Fraction(-2, 10)), Status.Burn, False, False)
-PARALYSIS = Effect((Stat.Speed, Fraction(-2, 10)), Status.Paralysis, False, False)
-POISON = Effect((Stat.Defense, Fraction(-2, 10)), Status.Poison, False, False)
-FROST = Effect(None, Status.Frost, True, True)
-DAZE = Effect(None, Status.Daze, True, False)
-RAGE = Effect(None, Status.Rage, False, True)
-TAILWIND = Effect((Stat.Speed, Fraction(2, 10)), Status.Tailwind, False, False)
-ELECTRON_FLOW = Effect(
-    (Stat.Attack, Fraction(2, 10)), Status.ElectronFlow, False, False
-)
-AQUA_SHIELD = Effect((Stat.Defense, Fraction(2, 10)), Status.AquaShield, False, False)
+class Status(Enum):
+    """Enumeration of all named Statuses which can apply to an Elemental."""
+
+    Burn = _StatusData(
+        affected_stat=(Stat.Attack, Fraction(-2, 10)), no_attack=False, no_support=False
+    )
+    Paralysis = _StatusData(
+        affected_stat=(Stat.Speed, Fraction(-2, 10)), no_attack=False, no_support=False
+    )
+    Poison = _StatusData(
+        affected_stat=(Stat.Defense, Fraction(-2, 10)),
+        no_attack=False,
+        no_support=False,
+    )
+    Frost = _StatusData(affected_stat=None, no_attack=True, no_support=True)
+    Daze = _StatusData(affected_stat=None, no_attack=True, no_support=False)
+    Rage = _StatusData(affected_stat=None, no_attack=False, no_support=True)
+    Tailwind = _StatusData(
+        affected_stat=(Stat.Speed, Fraction(-2, 10)), no_attack=False, no_support=False
+    )
+    ElectronFlow = _StatusData(
+        affected_stat=(Stat.Attack, Fraction(-2, 10)), no_attack=False, no_support=False
+    )
+    AquaShield = _StatusData(
+        affected_stat=(Stat.Defense, Fraction(-2, 10)),
+        no_attack=False,
+        no_support=False,
+    )

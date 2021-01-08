@@ -1,12 +1,12 @@
 from typing import Dict, Mapping, Set
 
+from .elemental import Element
 from .enums import Matchup
-from .simple_elemental import ElementalType
 
 
 class UncoveredElementalError(Exception):
     """Indicates that a matchup-to-types mapping contains fewer elementals than
-    are present in the ElementalType enum."""
+    are present in the Element enum."""
 
     pass
 
@@ -18,13 +18,11 @@ class DuplicateElementalError(Exception):
 
 
 class MatchupTable:
-    """A class representing the type matchups of a given enum kind."""
+    """A class representing the type matchups of a given enum element."""
 
     __slots__ = ["_matchups"]
 
-    def __init__(
-        self, matchup_to_types: Mapping[Matchup, Set["ElementalType"]]
-    ) -> None:
+    def __init__(self, matchup_to_types: Mapping[Matchup, Set["Element"]]) -> None:
         """
         Construct a new matchup table from `matchup_to_types`.
 
@@ -35,7 +33,7 @@ class MatchupTable:
         :raises DuplicateElementalError: if the mapping has some elemental type which is in the
                                          value corresponding to more than one matchup
         """
-        for kind in ElementalType:
+        for kind in Element:
             present_in = 0
             for types in matchup_to_types.values():
                 if kind in types:
@@ -46,11 +44,11 @@ class MatchupTable:
                 raise DuplicateElementalError(
                     f"Found mappings for {kind.name} to more " f"than one matchup"
                 )
-        self._matchups: Dict[ElementalType, Matchup] = {
+        self._matchups: Dict[Element, Matchup] = {
             v: k for k, vs in matchup_to_types.items() for v in vs
         }
 
-    def __getitem__(self, t: ElementalType) -> Matchup:
+    def __getitem__(self, t: Element) -> Matchup:
         """Get the matchup corresponding to the elemental type `t` stored in this table."""
         return self._matchups[t]
 
@@ -60,379 +58,287 @@ class MatchupTable:
 # noinspection DuplicatedCode,DuplicatedCode,DuplicatedCode,DuplicatedCode,DuplicatedCode,
 # DuplicatedCode
 # noinspection DuplicatedCode,DuplicatedCode
-MATCHUPS: Dict[ElementalType, MatchupTable] = {
-    ElementalType.Fire: MatchupTable(
+MATCHUPS: Dict[Element, MatchupTable] = {
+    Element.Fire: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Wind,
-                ElementalType.Lightning,
-                ElementalType.Smoke,
-                ElementalType.Plasma,
-                ElementalType.Steam,
-                ElementalType.Thunder,
-                ElementalType.Storm,
+                Element.Fire,
+                Element.Wind,
+                Element.Lightning,
+                Element.Smoke,
+                Element.Plasma,
+                Element.Steam,
+                Element.Thunder,
+                Element.Storm,
             },
-            Matchup.Advantage: {
-                ElementalType.Ice,
-                ElementalType.Crystal,
-                ElementalType.Flora,
-            },
+            Matchup.Advantage: {Element.Ice, Element.Crystal, Element.Flora,},
             Matchup.Disadvantage: {
-                ElementalType.Earth,
-                ElementalType.Water,
-                ElementalType.Magma,
-                ElementalType.Sand,
+                Element.Earth,
+                Element.Water,
+                Element.Magma,
+                Element.Sand,
             },
         }
     ),
-    ElementalType.Water: MatchupTable(
+    Element.Water: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Wind,
-                ElementalType.Lightning,
-                ElementalType.Smoke,
-                ElementalType.Plasma,
-                ElementalType.Thunder,
-                ElementalType.Earth,
-                ElementalType.Water,
-                ElementalType.Ice,
-                ElementalType.Crystal,
+                Element.Wind,
+                Element.Lightning,
+                Element.Smoke,
+                Element.Plasma,
+                Element.Thunder,
+                Element.Earth,
+                Element.Water,
+                Element.Ice,
+                Element.Crystal,
+            },
+            Matchup.Advantage: {Element.Fire, Element.Magma, Element.Sand,},
+            Matchup.Disadvantage: {Element.Flora, Element.Steam, Element.Storm,},
+        }
+    ),
+    Element.Earth: MatchupTable(
+        matchup_to_types={
+            Matchup.Neutral: {
+                Element.Fire,
+                Element.Smoke,
+                Element.Steam,
+                Element.Earth,
+                Element.Water,
+                Element.Sand,
+                Element.Ice,
+                Element.Crystal,
             },
             Matchup.Advantage: {
-                ElementalType.Fire,
-                ElementalType.Magma,
-                ElementalType.Sand,
+                Element.Lightning,
+                Element.Plasma,
+                Element.Thunder,
+                Element.Storm,
             },
+            Matchup.Disadvantage: {Element.Wind, Element.Magma, Element.Flora,},
+        }
+    ),
+    Element.Wind: MatchupTable(
+        matchup_to_types={
+            Matchup.Neutral: {
+                Element.Fire,
+                Element.Wind,
+                Element.Plasma,
+                Element.Thunder,
+                Element.Storm,
+                Element.Earth,
+                Element.Water,
+                Element.Magma,
+                Element.Flora,
+            },
+            Matchup.Advantage: {Element.Smoke, Element.Steam, Element.Sand,},
+            Matchup.Disadvantage: {Element.Lightning, Element.Ice, Element.Crystal,},
+        }
+    ),
+    Element.Lightning: MatchupTable(
+        matchup_to_types={
+            Matchup.Neutral: {
+                Element.Fire,
+                Element.Lightning,
+                Element.Steam,
+                Element.Thunder,
+                Element.Earth,
+                Element.Magma,
+                Element.Ice,
+                Element.Crystal,
+                Element.Flora,
+            },
+            Matchup.Advantage: {Element.Wind, Element.Water, Element.Smoke,},
+            Matchup.Disadvantage: {Element.Plasma, Element.Sand, Element.Storm,},
+        }
+    ),
+    Element.Magma: MatchupTable(
+        matchup_to_types={
+            Matchup.Neutral: {
+                Element.Wind,
+                Element.Lightning,
+                Element.Smoke,
+                Element.Plasma,
+                Element.Storm,
+                Element.Magma,
+                Element.Sand,
+                Element.Crystal,
+            },
+            Matchup.Advantage: {
+                Element.Earth,
+                Element.Steam,
+                Element.Ice,
+                Element.Flora,
+            },
+            Matchup.Disadvantage: {Element.Fire, Element.Water, Element.Thunder,},
+        }
+    ),
+    Element.Smoke: MatchupTable(
+        matchup_to_types={
+            Matchup.Neutral: {
+                Element.Fire,
+                Element.Smoke,
+                Element.Thunder,
+                Element.Storm,
+                Element.Earth,
+                Element.Water,
+                Element.Magma,
+                Element.Sand,
+                Element.Crystal,
+            },
+            Matchup.Advantage: {Element.Lightning, Element.Plasma, Element.Flora,},
+            Matchup.Disadvantage: {Element.Ice, Element.Steam, Element.Wind,},
+        }
+    ),
+    Element.Plasma: MatchupTable(
+        matchup_to_types={
+            Matchup.Neutral: {
+                Element.Fire,
+                Element.Lightning,
+                Element.Smoke,
+                Element.Plasma,
+                Element.Steam,
+                Element.Thunder,
+                Element.Ice,
+                Element.Crystal,
+                Element.Flora,
+            },
+            Matchup.Advantage: {Element.Wind, Element.Water, Element.Storm,},
+            Matchup.Disadvantage: {Element.Earth, Element.Magma, Element.Sand,},
+        }
+    ),
+    Element.Steam: MatchupTable(
+        matchup_to_types={
+            Matchup.Neutral: {
+                Element.Fire,
+                Element.Lightning,
+                Element.Plasma,
+                Element.Steam,
+                Element.Earth,
+                Element.Sand,
+                Element.Crystal,
+                Element.Flora,
+            },
+            Matchup.Advantage: {Element.Smoke, Element.Magma, Element.Ice,},
             Matchup.Disadvantage: {
-                ElementalType.Flora,
-                ElementalType.Steam,
-                ElementalType.Storm,
+                Element.Wind,
+                Element.Water,
+                Element.Thunder,
+                Element.Storm,
             },
         }
     ),
-    ElementalType.Earth: MatchupTable(
+    Element.Sand: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Smoke,
-                ElementalType.Steam,
-                ElementalType.Earth,
-                ElementalType.Water,
-                ElementalType.Sand,
-                ElementalType.Ice,
-                ElementalType.Crystal,
+                Element.Smoke,
+                Element.Steam,
+                Element.Thunder,
+                Element.Storm,
+                Element.Water,
+                Element.Sand,
+                Element.Ice,
+                Element.Flora,
             },
             Matchup.Advantage: {
-                ElementalType.Lightning,
-                ElementalType.Plasma,
-                ElementalType.Thunder,
-                ElementalType.Storm,
+                Element.Fire,
+                Element.Lightning,
+                Element.Magma,
+                Element.Plasma,
             },
-            Matchup.Disadvantage: {
-                ElementalType.Wind,
-                ElementalType.Magma,
-                ElementalType.Flora,
-            },
+            Matchup.Disadvantage: {Element.Wind, Element.Earth, Element.Crystal,},
         }
     ),
-    ElementalType.Wind: MatchupTable(
+    Element.Thunder: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Wind,
-                ElementalType.Plasma,
-                ElementalType.Thunder,
-                ElementalType.Storm,
-                ElementalType.Earth,
-                ElementalType.Water,
-                ElementalType.Magma,
-                ElementalType.Flora,
+                Element.Fire,
+                Element.Smoke,
+                Element.Plasma,
+                Element.Steam,
+                Element.Thunder,
+                Element.Storm,
+                Element.Magma,
+                Element.Ice,
+                Element.Water,
             },
-            Matchup.Advantage: {
-                ElementalType.Smoke,
-                ElementalType.Steam,
-                ElementalType.Sand,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Lightning,
-                ElementalType.Ice,
-                ElementalType.Crystal,
-            },
+            Matchup.Advantage: {Element.Wind, Element.Flora, Element.Crystal,},
+            Matchup.Disadvantage: {Element.Earth, Element.Sand, Element.Lightning,},
         }
     ),
-    ElementalType.Lightning: MatchupTable(
+    Element.Ice: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Lightning,
-                ElementalType.Steam,
-                ElementalType.Thunder,
-                ElementalType.Earth,
-                ElementalType.Magma,
-                ElementalType.Ice,
-                ElementalType.Crystal,
-                ElementalType.Flora,
+                Element.Wind,
+                Element.Lightning,
+                Element.Smoke,
+                Element.Steam,
+                Element.Thunder,
+                Element.Water,
+                Element.Ice,
+                Element.Crystal,
+                Element.Storm,
             },
-            Matchup.Advantage: {
-                ElementalType.Wind,
-                ElementalType.Water,
-                ElementalType.Smoke,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Plasma,
-                ElementalType.Sand,
-                ElementalType.Storm,
-            },
+            Matchup.Advantage: {Element.Earth, Element.Sand, Element.Flora,},
+            Matchup.Disadvantage: {Element.Fire, Element.Magma, Element.Plasma,},
         }
     ),
-    ElementalType.Magma: MatchupTable(
+    Element.Crystal: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Wind,
-                ElementalType.Lightning,
-                ElementalType.Smoke,
-                ElementalType.Plasma,
-                ElementalType.Storm,
-                ElementalType.Magma,
-                ElementalType.Sand,
-                ElementalType.Crystal,
+                Element.Wind,
+                Element.Lightning,
+                Element.Plasma,
+                Element.Steam,
+                Element.Water,
+                Element.Magma,
+                Element.Sand,
+                Element.Crystal,
+                Element.Flora,
             },
-            Matchup.Advantage: {
-                ElementalType.Earth,
-                ElementalType.Steam,
-                ElementalType.Ice,
-                ElementalType.Flora,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Fire,
-                ElementalType.Water,
-                ElementalType.Thunder,
-            },
+            Matchup.Advantage: {Element.Fire, Element.Thunder, Element.Storm,},
+            Matchup.Disadvantage: {Element.Earth, Element.Ice, Element.Smoke,},
         }
     ),
-    ElementalType.Smoke: MatchupTable(
+    Element.Flora: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Smoke,
-                ElementalType.Thunder,
-                ElementalType.Storm,
-                ElementalType.Earth,
-                ElementalType.Water,
-                ElementalType.Magma,
-                ElementalType.Sand,
-                ElementalType.Crystal,
+                Element.Wind,
+                Element.Lightning,
+                Element.Plasma,
+                Element.Thunder,
+                Element.Storm,
+                Element.Sand,
+                Element.Ice,
+                Element.Crystal,
+                Element.Flora,
             },
-            Matchup.Advantage: {
-                ElementalType.Lightning,
-                ElementalType.Plasma,
-                ElementalType.Flora,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Ice,
-                ElementalType.Steam,
-                ElementalType.Wind,
-            },
+            Matchup.Advantage: {Element.Earth, Element.Steam, Element.Water,},
+            Matchup.Disadvantage: {Element.Fire, Element.Magma, Element.Smoke,},
         }
     ),
-    ElementalType.Plasma: MatchupTable(
+    Element.Storm: MatchupTable(
         matchup_to_types={
             Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Lightning,
-                ElementalType.Smoke,
-                ElementalType.Plasma,
-                ElementalType.Steam,
-                ElementalType.Thunder,
-                ElementalType.Ice,
-                ElementalType.Crystal,
-                ElementalType.Flora,
+                Element.Wind,
+                Element.Storm,
+                Element.Water,
+                Element.Magma,
+                Element.Sand,
+                Element.Ice,
+                Element.Flora,
             },
             Matchup.Advantage: {
-                ElementalType.Wind,
-                ElementalType.Water,
-                ElementalType.Storm,
+                Element.Fire,
+                Element.Earth,
+                Element.Steam,
+                Element.Thunder,
             },
             Matchup.Disadvantage: {
-                ElementalType.Earth,
-                ElementalType.Magma,
-                ElementalType.Sand,
-            },
-        }
-    ),
-    ElementalType.Steam: MatchupTable(
-        matchup_to_types={
-            Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Lightning,
-                ElementalType.Plasma,
-                ElementalType.Steam,
-                ElementalType.Earth,
-                ElementalType.Sand,
-                ElementalType.Crystal,
-                ElementalType.Flora,
-            },
-            Matchup.Advantage: {
-                ElementalType.Smoke,
-                ElementalType.Magma,
-                ElementalType.Ice,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Wind,
-                ElementalType.Water,
-                ElementalType.Thunder,
-                ElementalType.Storm,
-            },
-        }
-    ),
-    ElementalType.Sand: MatchupTable(
-        matchup_to_types={
-            Matchup.Neutral: {
-                ElementalType.Smoke,
-                ElementalType.Steam,
-                ElementalType.Thunder,
-                ElementalType.Storm,
-                ElementalType.Water,
-                ElementalType.Sand,
-                ElementalType.Ice,
-                ElementalType.Flora,
-            },
-            Matchup.Advantage: {
-                ElementalType.Fire,
-                ElementalType.Lightning,
-                ElementalType.Magma,
-                ElementalType.Plasma,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Wind,
-                ElementalType.Earth,
-                ElementalType.Crystal,
-            },
-        }
-    ),
-    ElementalType.Thunder: MatchupTable(
-        matchup_to_types={
-            Matchup.Neutral: {
-                ElementalType.Fire,
-                ElementalType.Smoke,
-                ElementalType.Plasma,
-                ElementalType.Steam,
-                ElementalType.Thunder,
-                ElementalType.Storm,
-                ElementalType.Magma,
-                ElementalType.Ice,
-                ElementalType.Water,
-            },
-            Matchup.Advantage: {
-                ElementalType.Wind,
-                ElementalType.Flora,
-                ElementalType.Crystal,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Earth,
-                ElementalType.Sand,
-                ElementalType.Lightning,
-            },
-        }
-    ),
-    ElementalType.Ice: MatchupTable(
-        matchup_to_types={
-            Matchup.Neutral: {
-                ElementalType.Wind,
-                ElementalType.Lightning,
-                ElementalType.Smoke,
-                ElementalType.Steam,
-                ElementalType.Thunder,
-                ElementalType.Water,
-                ElementalType.Ice,
-                ElementalType.Crystal,
-                ElementalType.Storm,
-            },
-            Matchup.Advantage: {
-                ElementalType.Earth,
-                ElementalType.Sand,
-                ElementalType.Flora,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Fire,
-                ElementalType.Magma,
-                ElementalType.Plasma,
-            },
-        }
-    ),
-    ElementalType.Crystal: MatchupTable(
-        matchup_to_types={
-            Matchup.Neutral: {
-                ElementalType.Wind,
-                ElementalType.Lightning,
-                ElementalType.Plasma,
-                ElementalType.Steam,
-                ElementalType.Water,
-                ElementalType.Magma,
-                ElementalType.Sand,
-                ElementalType.Crystal,
-                ElementalType.Flora,
-            },
-            Matchup.Advantage: {
-                ElementalType.Fire,
-                ElementalType.Thunder,
-                ElementalType.Storm,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Earth,
-                ElementalType.Ice,
-                ElementalType.Smoke,
-            },
-        }
-    ),
-    ElementalType.Flora: MatchupTable(
-        matchup_to_types={
-            Matchup.Neutral: {
-                ElementalType.Wind,
-                ElementalType.Lightning,
-                ElementalType.Plasma,
-                ElementalType.Thunder,
-                ElementalType.Storm,
-                ElementalType.Sand,
-                ElementalType.Ice,
-                ElementalType.Crystal,
-                ElementalType.Flora,
-            },
-            Matchup.Advantage: {
-                ElementalType.Earth,
-                ElementalType.Steam,
-                ElementalType.Water,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Fire,
-                ElementalType.Magma,
-                ElementalType.Smoke,
-            },
-        }
-    ),
-    ElementalType.Storm: MatchupTable(
-        matchup_to_types={
-            Matchup.Neutral: {
-                ElementalType.Wind,
-                ElementalType.Storm,
-                ElementalType.Water,
-                ElementalType.Magma,
-                ElementalType.Sand,
-                ElementalType.Ice,
-                ElementalType.Flora,
-            },
-            Matchup.Advantage: {
-                ElementalType.Fire,
-                ElementalType.Earth,
-                ElementalType.Steam,
-                ElementalType.Thunder,
-            },
-            Matchup.Disadvantage: {
-                ElementalType.Smoke,
-                ElementalType.Plasma,
-                ElementalType.Lightning,
-                ElementalType.Crystal,
+                Element.Smoke,
+                Element.Plasma,
+                Element.Lightning,
+                Element.Crystal,
             },
         }
     ),

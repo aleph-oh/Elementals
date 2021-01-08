@@ -1,9 +1,12 @@
 import unittest
 
-from logic.elemental_data import ElementalType
+from logic.elemental_data import Element
 from logic.enums import Matchup
-from logic.type_matchups import (DuplicateElementalError, MatchupTable,
-                                 UncoveredElementalError)
+from logic.type_matchups import (
+    DuplicateElementalError,
+    MatchupTable,
+    UncoveredElementalError,
+)
 
 
 class TestMatchupTable(unittest.TestCase):
@@ -20,34 +23,34 @@ class TestMatchupTable(unittest.TestCase):
     """
 
     def test_one_matchup(self):
-        matchup_to_types = {Matchup.Neutral: {kind for kind in ElementalType}}
+        matchup_to_types = {Matchup.Neutral: {kind for kind in Element}}
         table = MatchupTable(matchup_to_types)
-        for kind in ElementalType:
+        for kind in Element:
             self.assertEqual(Matchup.Neutral, table[kind])
 
     def test_two_matchups(self):
-        adv = {ElementalType.Fire, ElementalType.Water, ElementalType.Wind}
+        adv = {Element.Fire, Element.Water, Element.Wind}
         matchup_to_types = {
-            Matchup.Neutral: {kind for kind in ElementalType if kind not in adv},
+            Matchup.Neutral: {kind for kind in Element if kind not in adv},
             Matchup.Advantage: adv,
         }
         table = MatchupTable(matchup_to_types)
-        for kind in ElementalType:
+        for kind in Element:
             if kind in adv:
                 self.assertEqual(Matchup.Advantage, table[kind])
             else:
                 self.assertEqual(Matchup.Neutral, table[kind])
 
     def test_three_matchups(self):
-        adv = {ElementalType.Fire, ElementalType.Water, ElementalType.Wind}
-        dis = {ElementalType.Smoke, ElementalType.Sand}
+        adv = {Element.Fire, Element.Water, Element.Wind}
+        dis = {Element.Smoke, Element.Sand}
         matchup_to_types = {
-            Matchup.Neutral: {kind for kind in ElementalType if kind not in adv | dis},
+            Matchup.Neutral: {kind for kind in Element if kind not in adv | dis},
             Matchup.Advantage: adv,
             Matchup.Disadvantage: dis,
         }
         table = MatchupTable(matchup_to_types)
-        for kind in ElementalType:
+        for kind in Element:
             if kind in adv:
                 self.assertEqual(Matchup.Advantage, table[kind])
             elif kind in dis:
@@ -56,15 +59,15 @@ class TestMatchupTable(unittest.TestCase):
                 self.assertEqual(Matchup.Neutral, table[kind])
 
     def test_uncovered_elemental(self):
-        matchup_to_types = {Matchup.Neutral: {ElementalType.Fire, ElementalType.Wind}}
+        matchup_to_types = {Matchup.Neutral: {Element.Fire, Element.Wind}}
         self.assertRaises(
             UncoveredElementalError, lambda: MatchupTable(matchup_to_types)
         )
 
     def test_duplicate_elemental(self):
-        adv = {ElementalType.Fire, ElementalType.Water, ElementalType.Wind}
+        adv = {Element.Fire, Element.Water, Element.Wind}
         matchup_to_types = {
-            Matchup.Neutral: {kind for kind in ElementalType},
+            Matchup.Neutral: {kind for kind in Element},
             Matchup.Advantage: adv,
         }
         self.assertRaises(

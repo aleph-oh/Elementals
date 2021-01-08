@@ -41,7 +41,7 @@ class ElementalData:
         return self._spd
 
 
-class ElementalType(Enum):
+class Element(Enum):
     """Represents an elemental's type, which dictates its learned movepool and its matchups."""
 
     # Normal
