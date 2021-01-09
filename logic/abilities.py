@@ -1020,3 +1020,51 @@ class Ability(Enum):
         barrier=0,
         targets=Targets.All,
         level=30
+   )]
+    Pour = [AbilityData(
+        damage=20,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    Tempest = [AbilityData(
+        damage=20,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.All,
+        level=6
+    )]
+    Monsoon = [AbilityData(
+        damage=40,
+        effects=(),
+        mana=60,
+        barrier=0,
+        targets=Targets.All,
+        level=12
+    )]
+    Typhoon = [AbilityData(
+        damage=80,
+        effects=(),
+        mana=80,
+        barrier=0,
+        targets=Targets.All,
+        level=18
+    )]
+    Cyclone = [AbilityData(
+        damage=100,
+        effects=(),
+        mana=120,
+        barrier=0,
+        targets=Targets.All,
+        level=24
+    )]
+    Hurricane = [AbilityData(
+        damage=150,
+        effects=(Status.Paralysis,),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30
