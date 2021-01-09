@@ -653,7 +653,7 @@ class Ability(Enum):
     MagmaRush = [AbilityData(
         damage=80,
         effects=(),
-        mana=80,
+        mana=70,
         barrier=0,
         targets=Targets.All,
         level=18
@@ -740,9 +740,9 @@ class Ability(Enum):
         level=6
     )]
     ParticleBlade = [AbilityData(
-        damage=100,
-        effects=(),
-        mana=50,
+        damage=90,
+        effects=(Status.Rage,),
+        mana=60,
         barrier=0,
         targets=Targets.Single,
         level=12
@@ -818,5 +818,53 @@ class Ability(Enum):
         mana=200,
         barrier=0,
         targets=Targets.Single,
+        level=30
+    )]
+    Sandstone = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=10,
+        barrier=10,
+        targets=Targets.Single,
+        level=1
+    )]
+    Simoom = [AbilityData(
+        damage=0,
+        effects=(Status.Daze,),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    Drought = [AbilityData(
+        damage=75,
+        effects=(Status.Daze,),
+        mana=50,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    DuneFort = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=80,
+        barrier=150,
+        targets=Targets.All,
+        level=18
+    )]
+    Sandstorm = [AbilityData(
+        damage=80,
+        effects=(Status.Daze,),
+        mana=100,
+        barrier=0,
+        targets=Targets.All,
+        level=24
+    )]
+    DesertBlockade = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=200,
+        barrier=300,
+        targets=Targets.All,
         level=30
     )]
