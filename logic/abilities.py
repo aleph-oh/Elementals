@@ -179,7 +179,7 @@ class Ability(Enum):
     """An enumeration of all available abilities"""
 
     Ember = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -187,7 +187,7 @@ class Ability(Enum):
         level=1
     )]
     Blaze = [AbilityData(
-        damage=25,
+        damage=30,
         effects=(),
         mana=20,
         barrier=0,
@@ -267,7 +267,7 @@ class Ability(Enum):
         level=30
     )]
     Puddle = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -275,7 +275,7 @@ class Ability(Enum):
         level=1
     )]
     Splash = [AbilityData(
-        damage=25,
+        damage=30,
         effects=(),
         mana=20,
         barrier=0,
@@ -355,7 +355,7 @@ class Ability(Enum):
         level=30
     )]
     Pebble = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -363,7 +363,7 @@ class Ability(Enum):
         level=1
     )]
     RockThrow = [AbilityData(
-        damage=25,
+        damage=30,
         effects=(),
         mana=20,
         barrier=0,
@@ -443,7 +443,7 @@ class Ability(Enum):
         level=30
     )]
     Breeze = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -451,7 +451,7 @@ class Ability(Enum):
         level=1
     )]
     Gust = [AbilityData(
-        damage=25,
+        damage=30,
         effects=(),
         mana=20,
         barrier=0,
@@ -539,7 +539,7 @@ class Ability(Enum):
         level=30
     )]
     Jolt = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -547,7 +547,7 @@ class Ability(Enum):
         level=1
     )]
     Spark = [AbilityData(
-        damage=25,
+        damage=30,
         effects=(),
         mana=20,
         barrier=0,
@@ -627,7 +627,7 @@ class Ability(Enum):
         level=30
     )]
     Melt = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -724,7 +724,7 @@ class Ability(Enum):
         level=30
     )]
     Ionize = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -869,7 +869,7 @@ class Ability(Enum):
         level=30
     )]
     Frost = [AbilityData(
-        damage=10,
+        damage=20,
         effects=(),
         mana=10,
         barrier=0,
@@ -917,3 +917,106 @@ class Ability(Enum):
         targets=Targets.All,
         level=30
     )]
+    OpalGlimmer = [AbilityData(
+        damage=-10,
+        effects=(),
+        mana=10,
+        barrier=10,
+        targets=Targets.Single,
+        level=1
+    )]
+    AmethystVeil = [AbilityData(
+        damage=-30,
+        effects=(),
+        mana=30,
+        barrier=30,
+        targets=Targets.Single,
+        level=6
+    )]
+    SapphireShield = [AbilityData(
+        damage=-70,
+        effects=(),
+        mana=60,
+        barrier=70,
+        targets=Targets.Single,
+        level=12
+    )]
+    EmeraldInfusion = [AbilityData(
+        damage=-80,
+        effects=(),
+        mana=80,
+        barrier=0,
+        targets=Targets.All,
+        level=18
+    )]
+    RubyRampart = [AbilityData(
+        damage=-120,
+        effects=(),
+        mana=120,
+        barrier=120,
+        targets=Targets.Single,
+        level=24
+    )]
+    DiamondStorm = [AbilityData(
+        damage=-100,
+        effects=(),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30
+    ),
+        AbilityData(
+            damage=100,
+            effects=(),
+            mana=0,
+            barrier=0,
+            targets=Targets.All,
+            level=30
+        )]
+    Sprout = [AbilityData(
+        damage=-20,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    Bloom = [AbilityData(
+        damage=-30,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.All,
+        level=6
+    )]
+    BlossomWave = [AbilityData(
+        damage=-60,
+        effects=(),
+        mana=60,
+        barrier=0,
+        targets=Targets.All,
+        level=12
+    )]
+    Photosynthesis = [AbilityData(
+        damage=-150,
+        effects=(),
+        mana=80,
+        barrier=0,
+        targets=Targets.Single,
+        level=18
+    )]
+    Afforestation = [AbilityData(
+        damage=-80,
+        effects=(),
+        mana=120,
+        barrier=150,
+        targets=Targets.All,
+        level=24
+    )]
+    NaturePower = [AbilityData(
+        damage=-200,
+        effects=(),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30
