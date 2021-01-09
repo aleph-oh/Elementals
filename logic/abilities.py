@@ -309,7 +309,7 @@ class Ability(Enum):
     AquaShield = [AbilityData(
         damage=0,
         effects=(Status.AquaShield,),
-        mana=75,
+        mana=70,
         barrier=0,
         targets=Targets.All,
         level=15,
@@ -536,5 +536,238 @@ class Ability(Enum):
         mana=200,
         barrier=0,
         targets=Targets.All,
+        level=30
+    )]
+    Jolt = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    Spark = [AbilityData(
+        damage=25,
+        effects=(),
+        mana=20,
+        barrier=0,
+        targets=Targets.Single,
+        level=3
+    )]
+    Static = [AbilityData(
+        damage=50,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    Shock = [AbilityData(
+        damage=60,
+        effects=(Status.Paralysis,),
+        mana=50,
+        barrier=0,
+        targets=Targets.Single,
+        level=9
+    )]
+    Thunderbolt = [AbilityData(
+        damage=90,
+        effects=(),
+        mana=60,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    ElectronFlow = [AbilityData(
+        damage=0,
+        effects=(Status.ElectronFlow,),
+        mana=70,
+        barrier=0,
+        targets=Targets.All,
+        level=15,
+    )]
+    Conduction = [AbilityData(
+        damage=-50,
+        effects=(),
+        mana=80,
+        barrier=90,
+        targets=Targets.Single,
+        level=18
+    )]
+    LightningStrike = [AbilityData(
+        damage=180,
+        effects=(),
+        mana=90,
+        barrier=0,
+        targets=Targets.Single,
+        level=21
+    )]
+    Shockwave = [AbilityData(
+        damage=80,
+        effects=(Status.Paralysis,),
+        mana=100,
+        barrier=0,
+        targets=Targets.All,
+        level=24
+    )]
+    GalvanicRush = [AbilityData(
+        damage=250,
+        effects=(Status.Paralysis,),
+        mana=150,
+        barrier=0,
+        targets=Targets.Single,
+        level=27
+    )]
+    TerawattSmite = [AbilityData(
+        damage=400,
+        effects=(Status.Paralysis,),
+        mana=200,
+        barrier=0,
+        targets=Targets.Single,
+        level=30
+    )]
+    Melt = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    LavaSplash = [AbilityData(
+        damage=20,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.All,
+        level=6
+    )]
+    ObsidianBlade = [AbilityData(
+        damage=90,
+        effects=(Status.Rage,),
+        mana=60,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    MagmaRush = [AbilityData(
+        damage=80,
+        effects=(),
+        mana=80,
+        barrier=0,
+        targets=Targets.All,
+        level=18
+    )]
+    VolcanicBlitz = [AbilityData(
+        damage=200,
+        effects=(),
+        mana=100,
+        barrier=0,
+        targets=Targets.Single,
+        level=24
+    )]
+    Eruption = [AbilityData(
+        damage=150,
+        effects=(Status.Poison,),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30
+    )]
+    Soot = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=10,
+        barrier=10,
+        targets=Targets.Single,
+        level=1
+    )]
+    SmokeScreen = [AbilityData(
+        damage=0,
+        effects=(Status.Poison,),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    Exhaust = [AbilityData(
+        damage=-75,
+        effects=(),
+        mana=50,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    AshDome = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=100,
+        barrier=150,
+        targets=Targets.All,
+        level=18
+    )]
+    DenseSmog = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=100,
+        barrier=SingleBarrier(200,
+                              (Status.Poison,)),
+        targets=Targets.Single,
+        level=24
+    )]
+    PollutionVortex = [AbilityData(
+        damage=400,
+        effects=(Status.Poison,),
+        mana=200,
+        barrier=0,
+        targets=Targets.Single,
+        level=30
+    )]
+    Ionize = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    PlasmaBolt = [AbilityData(
+        damage=50,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    ParticleBlade = [AbilityData(
+        damage=-100,
+        effects=(),
+        mana=50,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    PhotonBeam = [AbilityData(
+        damage=120,
+        effects=(Status.Burn, Status.Paralysis, Status.Poison,),
+        mana=80,
+        barrier=0,
+        targets=Targets.Single,
+        level=18
+    )]
+    AtomicWave = [AbilityData(
+        damage=80,
+        effects=(Status.Burn, Status.Paralysis, Status.Poison,),
+        mana=100,
+        barrier=0,
+        targets=Targets.All,
+        level=24
+    )]
+    GammaRay = [AbilityData(
+        damage=300,
+        effects=(Status.Burn, Status.Paralysis, Status.Poison,),
+        mana=200,
+        barrier=0,
+        targets=Targets.Single,
         level=30
     )]
