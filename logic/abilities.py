@@ -466,7 +466,7 @@ class Ability(Enum):
         targets=Targets.Single,
         level=6
     )]
-    Derecho = [AbilityData(
+    ArcusCloud = [AbilityData(
         damage=0,
         effects=(),
         mana=50,
@@ -740,7 +740,7 @@ class Ability(Enum):
         level=6
     )]
     ParticleBlade = [AbilityData(
-        damage=-100,
+        damage=100,
         effects=(),
         mana=50,
         barrier=0,
@@ -766,6 +766,55 @@ class Ability(Enum):
     GammaRay = [AbilityData(
         damage=300,
         effects=(Status.Burn, Status.Paralysis, Status.Poison,),
+        mana=200,
+        barrier=0,
+        targets=Targets.Single,
+        level=30
+    )]
+    Boil = [AbilityData(
+        damage=10,
+        effects=(Status.Rage,),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    HotSpring = [AbilityData(
+        damage=-40,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    MistCloud = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=50,
+        barrier=100,
+        targets=Targets.All,
+        level=12
+    )]
+    SteamSurge = [AbilityData(
+        damage=80,
+        effects=(Status.Burn,),
+        mana=80,
+        barrier=0,
+        targets=Targets.Single,
+        level=18
+    )]
+    VaporWall = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=80,
+        barrier=SingleBarrier(200,
+                              (Status.Burn,)),
+        targets=Targets.Single,
+        level=24
+    )]
+    GeyserBlast = [AbilityData(
+        damage=400,
+        effects=(Status.Burn,),
         mana=200,
         barrier=0,
         targets=Targets.Single,
