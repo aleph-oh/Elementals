@@ -1068,3 +1068,58 @@ class Ability(Enum):
         barrier=0,
         targets=Targets.All,
         level=30
+   )]
+    Boom = [AbilityData(
+        damage=0,
+        effects=(Status.Rage,),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1,
+        ignore_barrier_when_thunder=True
+    )]
+    Roar = [AbilityData(
+        damage=40,
+        effects=(),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6,
+        ignore_barrier_when_thunder = True
+    )]
+    Reverberation = [AbilityData(
+        damage=80,
+        effects=(),
+        mana=70,
+        barrier=0,
+        targets=Targets.Single,
+        level=12,
+        ignore_barrier_when_thunder = True
+    )]
+    Thunderclap = [AbilityData(
+        damage=120,
+        effects=(),
+        mana=100,
+        barrier=0,
+        targets=Targets.Single,
+        level=18,
+        ignore_barrier_when_thunder = True
+    )]
+    NimbusCloud = [AbilityData(
+        damage=0,
+        effects=(),
+        mana=120,
+        barrier=SingleBarrier(200,
+                              (Status.Paralysis,)),
+        targets=Targets.Single,
+        level=24,
+    )]
+    Fulmination = [AbilityData(
+        damage=300,
+        effects=(),
+        mana=200,
+        barrier=0,
+        targets=Targets.All,
+        level=30,
+        ignore_barrier_when_thunder=True,
+    )]
