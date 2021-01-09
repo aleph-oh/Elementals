@@ -701,7 +701,7 @@ class Ability(Enum):
     AshDome = [AbilityData(
         damage=0,
         effects=(),
-        mana=100,
+        mana=80,
         barrier=150,
         targets=Targets.All,
         level=18
@@ -709,7 +709,7 @@ class Ability(Enum):
     DenseSmog = [AbilityData(
         damage=0,
         effects=(),
-        mana=100,
+        mana=120,
         barrier=SingleBarrier(200,
                               (Status.Poison,)),
         targets=Targets.Single,
@@ -806,7 +806,7 @@ class Ability(Enum):
     VaporWall = [AbilityData(
         damage=0,
         effects=(),
-        mana=80,
+        mana=120,
         barrier=SingleBarrier(200,
                               (Status.Burn,)),
         targets=Targets.Single,
@@ -865,6 +865,55 @@ class Ability(Enum):
         effects=(),
         mana=200,
         barrier=300,
+        targets=Targets.All,
+        level=30
+    )]
+    Frost = [AbilityData(
+        damage=10,
+        effects=(),
+        mana=10,
+        barrier=0,
+        targets=Targets.Single,
+        level=1
+    )]
+    IceBeam = [AbilityData(
+        damage=30,
+        effects=(Status.Frost,),
+        mana=30,
+        barrier=0,
+        targets=Targets.Single,
+        level=6
+    )]
+    IcicleSlash = [AbilityData(
+        damage=90,
+        effects=(Status.Rage,),
+        mana=60,
+        barrier=0,
+        targets=Targets.Single,
+        level=12
+    )]
+    Avalanche = [AbilityData(
+        damage=120,
+        effects=(Status.Frost,),
+        mana=80,
+        barrier=0,
+        targets=Targets.Single,
+        level=18
+    )]
+    RimeShield = [AbilityData(
+        damage=80,
+        effects=(Status.Daze,),
+        mana=120,
+        barrier=SingleBarrier(200,
+                              (Status.Frost,)),
+        targets=Targets.Single,
+        level=24
+    )]
+    Blizzard = [AbilityData(
+        damage=150,
+        effects=(Status.Frost,),
+        mana=200,
+        barrier=0,
         targets=Targets.All,
         level=30
     )]
